@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30907.101
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebPart", "WebPart\WebPart.csproj", "{1B6A71FB-8282-41E0-BEB4-88C1C40E82BA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DesktopPart", "DesktopPart\DesktopPart.csproj", "{9FD00ACA-D56E-44CC-8C7C-44F937277B36}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServicePart", "ServicePart\ServicePart.csproj", "{5D2D834F-FB3B-4C80-9F95-D16B24CEA9F6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1B6A71FB-8282-41E0-BEB4-88C1C40E82BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1B6A71FB-8282-41E0-BEB4-88C1C40E82BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1B6A71FB-8282-41E0-BEB4-88C1C40E82BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1B6A71FB-8282-41E0-BEB4-88C1C40E82BA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9FD00ACA-D56E-44CC-8C7C-44F937277B36}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9FD00ACA-D56E-44CC-8C7C-44F937277B36}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9FD00ACA-D56E-44CC-8C7C-44F937277B36}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9FD00ACA-D56E-44CC-8C7C-44F937277B36}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5D2D834F-FB3B-4C80-9F95-D16B24CEA9F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5D2D834F-FB3B-4C80-9F95-D16B24CEA9F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5D2D834F-FB3B-4C80-9F95-D16B24CEA9F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5D2D834F-FB3B-4C80-9F95-D16B24CEA9F6}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {DC4BB60B-5210-44A6-B156-58A631D255ED}
+	EndGlobalSection
+EndGlobal

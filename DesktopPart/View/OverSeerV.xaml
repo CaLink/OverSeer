@@ -1,0 +1,170 @@
+﻿<Window x:Class="DesktopPart.View.OverSeerV"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:DesktopPart.View"
+        xmlns:custom="clr-namespace:DesktopPart.CUstoM"
+        xmlns:ViewModel="clr-namespace:DesktopPart.ModelView"
+        mc:Ignorable="d"
+        Title="OverSeerV" Height="450" Width="800">
+    <Window.Resources>
+        <ViewModel:OverSeerMV x:Key="View"/>
+    </Window.Resources>
+
+    <Grid DataContext="{StaticResource View}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="2*"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <Menu Grid.ColumnSpan="2">
+            <MenuItem Header="Edit" Command="{Binding OpenSMT}" CommandParameter="Edit"/>
+            <MenuItem Header="Log" Command="{Binding OpenSMT}" CommandParameter="Log"/>
+            <MenuItem Header="Settings" Command="{Binding OpenSMT}" CommandParameter="Settings"/>
+            <MenuItem Header="Abot" Command="{Binding OpenSMT}" CommandParameter="About"/>
+        </Menu>
+
+        <GroupBox Grid.Row="1" Margin="10">
+            <ListBox ItemsSource="{Binding PCs}" DisplayMemberPath="Name" SelectedItem="{Binding SelectedPC}"/>
+
+            <!--
+                <TreeView Margin="0 5 0 2" ItemsSource="{Binding PCs}">
+                <TreeView.ItemTemplate >
+                    <HierarchicalDataTemplate ItemsSource="{Binding PCs}" >
+                        <TextBlock Text="{Binding Name}"/>
+                        <HierarchicalDataTemplate.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Name}"/>
+                            </DataTemplate>
+                        </HierarchicalDataTemplate.ItemTemplate>
+                    </HierarchicalDataTemplate>
+                </TreeView.ItemTemplate>
+            </TreeView>
+            -->
+        </GroupBox>
+
+        <Grid Grid.Column="1" Grid.Row="1" Visibility="{Binding Converter}">
+
+            <TabControl Margin="10">
+
+                <TabItem Header="Main">
+
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+
+                        <GroupItem  Margin="10">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+
+                                </Grid.ColumnDefinitions>
+
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+
+                                <StackPanel Orientation="Horizontal">
+                                    <Label Content="CPU Usage"/>
+                                    <Label Content="%"/>
+                                </StackPanel>
+
+                                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                    <Label Content="BOSS Of CPU"/>
+                                    <Label Content="%"/>
+                                </StackPanel>
+
+                                <StackPanel Grid.Row="1" Orientation="Horizontal">
+                                    <Label Content="RAM Usage"/>
+                                    <Label Content="%"/>
+                                </StackPanel>
+
+                                <StackPanel Grid.Column="1" Grid.Row="1" Orientation="Horizontal">
+                                    <Label Content="BOSS Of RAM"/>
+                                    <Label Content="%"/>
+                                </StackPanel>
+
+                                <StackPanel Grid.Row="2" Orientation="Horizontal">
+                                    <Label Content="IDC Usage"/>
+                                    <Label Content="%"/>
+                                </StackPanel>
+
+                                <StackPanel Grid.Column="1" Grid.Row="2" Orientation="Horizontal">
+                                    <Label Content="BOSS Of IDC"/>
+                                    <Label Content="%"/>
+                                </StackPanel>
+                            </Grid>
+
+                        </GroupItem>
+
+
+                        <Image Grid.Row="1" Source="D:\Picture\Nw2Ke73.png"  Margin="10 5 10 5"  Stretch="UniformToFill" />
+                        <Button Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0 0 10 5 " Content="Ѡ"/>
+
+                    </Grid>
+                </TabItem>
+
+                <TabItem Header="Performance">
+                    <GroupBox>
+                        <ListView Margin=" 0 3 0 2">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Header="Name"/>
+                                    <GridViewColumn Header="User"/>
+                                    <GridViewColumn Header="CPU %"/>
+                                    <GridViewColumn Header="RAM %"/>
+                                    <GridViewColumn Header="Description"/>
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                    </GroupBox>
+                </TabItem>
+
+                <TabItem Header="Graphs">
+                    <GroupBox>
+                        <custom:UserControl1></custom:UserControl1>
+                    </GroupBox>
+                </TabItem>
+
+                <TabItem Header="System">
+                    <GroupItem>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+
+                            <Label Grid.Column="0" Grid.Row="0" Content="CPU:"/>
+                            <Label Grid.Column="1" Grid.Row="0" Content="Value:"/>
+                            <Label Grid.Column="0" Grid.Row="1" Content="RAM:"/>
+                            <Label Grid.Column="1" Grid.Row="1" Content="Value:"/>
+                            <Label Grid.Column="0" Grid.Row="2" Content="IDC:"/>
+                            <Label Grid.Column="1" Grid.Row="2" Content="Value:"/>
+
+
+                        </Grid>
+                    </GroupItem>
+                </TabItem>
+
+            </TabControl>
+        </Grid>
+
+    </Grid>
+</Window>
