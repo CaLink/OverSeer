@@ -43,7 +43,7 @@ namespace DesktopPart.ModelView
             GetInfo = new CustomCUMmand<string>(
                 (s) =>
                 {
-
+                    
                 });
         }
 

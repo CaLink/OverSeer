@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:DesktopPart.View"
         xmlns:custom="clr-namespace:DesktopPart.CUstoM"
         xmlns:ViewModel="clr-namespace:DesktopPart.ModelView"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         mc:Ignorable="d"
         Title="OverSeerV" Height="450" Width="800">
     <Window.Resources>
@@ -31,7 +32,13 @@
         </Menu>
 
         <GroupBox Grid.Row="1" Margin="10">
-            <ListBox ItemsSource="{Binding PCs}" DisplayMemberPath="Name" SelectedItem="{Binding SelectedPC}"/>
+            <ListBox ItemsSource="{Binding PCs}" DisplayMemberPath="Name" SelectedItem="{Binding SelectedPC}">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="MouseDoubleClick">
+                        <i:InvokeCommandAction Command="{Binding GetInfo}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </ListBox>
 
             <!--
                 <TreeView Margin="0 5 0 2" ItemsSource="{Binding PCs}">
