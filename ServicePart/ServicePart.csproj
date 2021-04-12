@@ -39,7 +39,9 @@
     <Reference Include="System" />
     <Reference Include="System.Configuration.Install" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Management" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -55,6 +57,8 @@
     <Compile Include="OverSeerService.Designer.cs">
       <DependentUpon>OverSeerService.cs</DependentUpon>
     </Compile>
+    <Compile Include="PcInfo.cs" />
+    <Compile Include="ProcessInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="ProjectInstaller.cs">
       <SubType>Component</SubType>
