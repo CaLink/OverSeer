@@ -3,11 +3,16 @@ using DesktopPart.View;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using System.Net.Sockets;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Media.Imaging;
 
 namespace DesktopPart.ModelView
 {
@@ -18,6 +23,18 @@ namespace DesktopPart.ModelView
         PC selectedPC;
         public PC SelectedPC { get { return selectedPC; } set { selectedPC = value; } }
         public ChosenOne SelectedPCInfo { get; set; }
+
+        private PcInfo pcInfo;
+        public PcInfo PcInfo { get { return pcInfo; } set { pcInfo = value; RaiseEvent(nameof(PcInfo)); } }
+
+        private ProcessInfo pInfo;
+        public ProcessInfo PInfo { get { return pInfo; } set { pInfo = value; RaiseEvent(nameof(PInfo)); }}
+
+        private BitmapImage jpeg;
+        public BitmapImage JPEG { get { return jpeg; } set { jpeg = value; RaiseEvent(nameof(JPEG)); }}
+
+
+
 
 
 
@@ -43,8 +60,65 @@ namespace DesktopPart.ModelView
             GetInfo = new CustomCUMmand<string>(
                 (s) =>
                 {
+                    if (selectedPC == null)
+                        return;
+
+                    string message = "GetFullInfo";
+
+                    byte[] data = Encoding.UTF8.GetBytes(message);
+
+                    try
+                    {
+                        TcpClient client = new TcpClient();
+                        client.Connect(SelectedPC.IP, 1488);
+
+                        NetworkStream ns = client.GetStream();
+                        ns.Write(data, 0, data.Length);
+
+
+                        data = new byte[256];
+                        StringBuilder sb = new StringBuilder();
+                        do
+                        {
+                            int bytes = ns.Read(data, 0, data.Length);
+                            sb.Append(Encoding.UTF8.GetString(data, 0, bytes));
+
+                        }
+                        while (ns.DataAvailable);
+
+                        ns.Close();
+                        client.Close();
+
+                        SelectedPCInfo = JsonSerializer.Deserialize<ChosenOne>(sb.ToString(), new JsonSerializerOptions() { WriteIndented = true });
+
+                        PcInfo = SelectedPCInfo.PcInfo;
+                        PInfo = SelectedPCInfo.ProcessInfo;
+                        JPEG = Translate(SelectedPCInfo.Bmp);
+                    }
+                    catch (Exception e)
+                    {
+
+                        MessageBox.Show("Lost connection\n" + e.Message);
+                    }
+                    
                     
                 });
+        }
+
+        private BitmapImage Translate(Bitmap bitmap)
+        {
+            using (MemoryStream ms = new MemoryStream())
+            {
+                bitmap.Save(ms, ImageFormat.Bmp);
+                ms.Position = 0;
+                BitmapImage bmp = new BitmapImage();
+                bmp.BeginInit();
+                bmp.StreamSource = ms;
+                bmp.CacheOption = BitmapCacheOption.OnLoad;
+                bmp.EndInit();
+
+                return bmp;
+            }
         }
 
         private void Init()
@@ -58,7 +132,7 @@ namespace DesktopPart.ModelView
                 if (string.IsNullOrEmpty(json))
                     return;
 
-                Data.PCs = JsonSerializer.Deserialize<ObservableCollection<PC>>(json); 
+                Data.PCs = JsonSerializer.Deserialize<ObservableCollection<PC>>(json);
                 PCs = Data.PCs;
             }
 
@@ -92,6 +166,6 @@ namespace DesktopPart.ModelView
             //}; //Чтение из файла сделать
         }
 
-        
+
     }
 }

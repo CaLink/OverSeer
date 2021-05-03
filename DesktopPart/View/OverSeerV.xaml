@@ -28,7 +28,7 @@
             <MenuItem Header="Edit" Command="{Binding OpenSMT}" CommandParameter="Edit"/>
             <MenuItem Header="Log" Command="{Binding OpenSMT}" CommandParameter="Log"/>
             <MenuItem Header="Settings" Command="{Binding OpenSMT}" CommandParameter="Settings"/>
-            <MenuItem Header="Abot" Command="{Binding OpenSMT}" CommandParameter="About"/>
+            <MenuItem Header="About" Command="{Binding OpenSMT}" CommandParameter="About"/>
         </Menu>
 
         <GroupBox Grid.Row="1" Margin="10">
@@ -84,7 +84,7 @@
 
                                 <StackPanel Orientation="Horizontal">
                                     <Label Content="CPU Usage"/>
-                                    <Label Content="%"/>
+                                    <Label Content="{Binding PInfo.CpuTotal}" ContentStringFormat=" {0}%"/>
                                 </StackPanel>
 
                                 <StackPanel Grid.Column="1" Orientation="Horizontal">
@@ -94,7 +94,7 @@
 
                                 <StackPanel Grid.Row="1" Orientation="Horizontal">
                                     <Label Content="RAM Usage"/>
-                                    <Label Content="%"/>
+                                    <Label Content="{Binding PInfo.TotalRamLoad}" ContentStringFormat=" {0}%"/>
                                 </StackPanel>
 
                                 <StackPanel Grid.Column="1" Grid.Row="1" Orientation="Horizontal">
@@ -116,7 +116,7 @@
                         </GroupItem>
 
 
-                        <Image Grid.Row="1" Source="D:\Picture\Nw2Ke73.png"  Margin="10 5 10 5"  Stretch="UniformToFill" />
+                        <Image Grid.Row="1" Source="{Binding JPEG}"  Margin="10 5 10 5"  Stretch="UniformToFill" />
                         <Button Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0 0 10 5 " Content="Ѡ"/>
 
                     </Grid>
@@ -124,14 +124,15 @@
 
                 <TabItem Header="Performance">
                     <GroupBox>
-                        <ListView Margin=" 0 3 0 2">
+                        <ListView Margin=" 0 3 0 2" ItemsSource="{Binding PInfo.ProcessList}">
                             <ListView.View>
                                 <GridView>
-                                    <GridViewColumn Header="Name"/>
-                                    <GridViewColumn Header="User"/>
-                                    <GridViewColumn Header="CPU %"/>
-                                    <GridViewColumn Header="RAM %"/>
-                                    <GridViewColumn Header="Description"/>
+                                    <GridViewColumn Header="ID" DisplayMemberBinding="{Binding Path=ID}"/>
+                                    <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Path=Name}"/>
+                                    <!--<GridViewColumn Header="User"/>-->
+                                    <GridViewColumn Header="CPU %" DisplayMemberBinding="{Binding Path=Cpu}"/>
+                                    <GridViewColumn Header="RAM %" DisplayMemberBinding="{Binding Path=Ram}"/>
+                                    <!--<GridViewColumn Header="Description"/>-->
                                 </GridView>
                             </ListView.View>
                         </ListView>
@@ -156,16 +157,49 @@
                                 <RowDefinition/>
                                 <RowDefinition/>
                                 <RowDefinition/>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                                <RowDefinition MaxHeight="7"/>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                                <RowDefinition/>
                             </Grid.RowDefinitions>
 
-                            <Label Grid.Column="0" Grid.Row="0" Content="CPU:"/>
-                            <Label Grid.Column="1" Grid.Row="0" Content="Value:"/>
-                            <Label Grid.Column="0" Grid.Row="1" Content="RAM:"/>
-                            <Label Grid.Column="1" Grid.Row="1" Content="Value:"/>
-                            <Label Grid.Column="0" Grid.Row="2" Content="IDC:"/>
-                            <Label Grid.Column="1" Grid.Row="2" Content="Value:"/>
+                            <Label Grid.Column="0" Grid.Row="0" Content="CPU"/>
+                            <Label Grid.Column="1" Grid.Row="0" Content="{Binding PcInfo.CpuName}"/>
+                            <Label Grid.Column="0" Grid.Row="1" Content="Cores"/>
+                            <Label Grid.Column="1" Grid.Row="1" Content="{Binding PcInfo.Cores}"/>
+                            <Label Grid.Column="0" Grid.Row="2" Content="Logical Processors"/>
+                            <Label Grid.Column="1" Grid.Row="2" Content="{Binding PcInfo.LogicalProcessors}"/>
+                            <Label Grid.Column="0" Grid.Row="3" Content="Socket"/>
+                            <Label Grid.Column="1" Grid.Row="3" Content="{Binding PcInfo.SocketName}"/>
+                            <Label Grid.Column="0" Grid.Row="4" Content="RAM"/>
+                            <Label Grid.Column="1" Grid.Row="4" Content="{Binding PcInfo.Ram}"/>
 
+                            <Label Grid.Column="0" Grid.Row="5" Content=""/>
+                            <Label Grid.Column="1" Grid.Row="5" Content=""/>
 
+                            <Label Grid.Column="0" Grid.Row="6" Content="System Name"/>
+                            <Label Grid.Column="1" Grid.Row="6" Content="{Binding PcInfo.SystemName}"/>
+                            <Label Grid.Column="0" Grid.Row="7" Content="OS Architecture"/>
+                            <Label Grid.Column="1" Grid.Row="7" Content="{Binding PcInfo.OSArchitecture}"/>
+                            <Label Grid.Column="0" Grid.Row="8" Content="OS Version"/>
+                            <Label Grid.Column="1" Grid.Row="8" Content="{Binding PcInfo.OSVersion}"/>
+
+                            <ListView Grid.ColumnSpan="2" Grid.Row="9" ItemsSource="{Binding PcInfo.Drives}" Margin="0 7 0 0">
+                                <ListView.View>
+                                    <GridView>
+                                        <GridViewColumn DisplayMemberBinding="{Binding Path=Drive}" Header="Drive" >
+                                        </GridViewColumn>
+                                        <GridViewColumn DisplayMemberBinding="{Binding Path=DriveType}" Header="Drive Type"/>
+                                        <GridViewColumn DisplayMemberBinding="{Binding Path=FileSystem}" Header="File System"/>
+                                        <GridViewColumn DisplayMemberBinding="{Binding Path=AvailabeSpace}" Header="Availabe Space"/>
+                                        <GridViewColumn DisplayMemberBinding="{Binding Path=TotalSize}" Header="Total Size"/>
+                                    </GridView>
+                                </ListView.View>
+                            </ListView>
+                            
                         </Grid>
                     </GroupItem>
                 </TabItem>

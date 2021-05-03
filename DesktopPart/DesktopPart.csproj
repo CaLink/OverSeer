@@ -49,6 +49,7 @@
       <HintPath>..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
     </Reference>
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Memory.4.5.4\lib\net461\System.Memory.dll</HintPath>
     </Reference>
@@ -83,8 +84,9 @@
     <Compile Include="Model\ChosenOne.cs" />
     <Compile Include="Model\Data.cs" />
     <Compile Include="Model\PC.cs" />
+    <Compile Include="Model\PcInfo.cs" />
     <Compile Include="Model\PC_Groupe.cs" />
-    <Compile Include="Model\Process.cs" />
+    <Compile Include="Model\ProcessInfo.cs" />
     <Compile Include="View\AddPC.xaml.cs">
       <DependentUpon>AddPC.xaml</DependentUpon>
     </Compile>
