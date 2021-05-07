@@ -9,6 +9,7 @@
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         mc:Ignorable="d"
         Title="OverSeerV" Height="450" Width="800">
+    
     <Window.Resources>
         <ViewModel:OverSeerMV x:Key="View"/>
     </Window.Resources>
@@ -116,8 +117,8 @@
                         </GroupItem>
 
 
-                        <Image Grid.Row="1" Source="{Binding JPEG}"  Margin="10 5 10 5"  Stretch="UniformToFill" />
-                        <Button Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0 0 10 5 " Content="Ѡ"/>
+                        <Image Grid.Row="1" Source="{Binding Jpeg}"  Margin="10 5 10 5"  Stretch="Fill" />
+                        <Button Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0 0 10 5 " Content="Ѡ" Command="{Binding UpdateJPEG}"/>
 
                     </Grid>
                 </TabItem>

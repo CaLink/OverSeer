@@ -40,7 +40,7 @@ namespace DesktopPart.Model
 
         public PcInfo PcInfo{ get; set; }
         public ProcessInfo ProcessInfo { get; set; }
-        public Bitmap Bmp{ get; set; }
+        //public Bitmap Bmp{ get; set; }
 
     }
 }

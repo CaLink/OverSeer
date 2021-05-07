@@ -13,6 +13,7 @@ using System.Net.Sockets;
 using System.ServiceProcess;
 using System.Text;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows.Forms;
@@ -33,6 +34,9 @@ namespace ServicePart
         int port;
         TcpListener Hey;
 
+        Thread listenTread;
+
+
 
 
         public OverSeerService()
@@ -52,9 +56,14 @@ namespace ServicePart
         protected override void OnStart(string[] args)
         {
             eventLog1.WriteEntry($"{DateTime.Now}\nITS ALIVE", EventLogEntryType.Information, eventID++); // Стартуем
-            
-            //Todo Отдельный поток
 
+            listenTread = new Thread(new ThreadStart(HeyListen));
+            listenTread.Start();
+   
+        }
+
+        public void HeyListen()
+        {
             localhost = IPAddress.Parse("127.0.0.1");
             port = 1488;
             Hey = new TcpListener(localhost, port);
@@ -92,25 +101,13 @@ namespace ServicePart
                     case "GetFullInfo":
                         GetInfo();
                         GetProccessInfo();
-                        eventLog1.WriteEntry("Жив", EventLogEntryType.Information, eventID++);
-                        
+
                         //Todo
-                        try
-                        {
-                            GetScreen();
-
-                        }
-                        catch (Exception e)
-                        {
-
-                            eventLog1.WriteEntry(e.ToString(), EventLogEntryType.Information, eventID++);
-                        }
-
-                        eventLog1.WriteEntry("оЖил", EventLogEntryType.Information, eventID++);
-                        ChosenOne tempChosen = new ChosenOne() { PcInfo = pcInfo, ProcessInfo = pInfo, Bmp = bmp};
-                        eventLog1.WriteEntry("Жив", EventLogEntryType.Information, eventID++);
+                        //GetScreen();
+                        //ChosenOne tempChosen = new ChosenOne() { PcInfo = pcInfo, ProcessInfo = pInfo, Bmp = bmp };
+                        
+                        ChosenOne tempChosen = new ChosenOne() { PcInfo = pcInfo, ProcessInfo = pInfo};
                         send = JsonSerializer.Serialize<ChosenOne>(tempChosen, jso);
-                        eventLog1.WriteEntry("СМЭРД", EventLogEntryType.Information, eventID++);
                         break;
                     case "GetProcess":
                         GetProccessInfo();
@@ -122,7 +119,7 @@ namespace ServicePart
                         break;
 
                     default:
-                        return;
+                        continue; //?????
 
                 }
 
@@ -133,22 +130,7 @@ namespace ServicePart
                 eventLog1.WriteEntry("Полетели", EventLogEntryType.Information, eventID++);
 
 
-                /*if (message == "GetFullInfo")
-                {
-                    GetInfo();
-                    GetProccessInfo();
 
-                    ChosenOne tempChosen = new ChosenOne() { PcInfo = pcInfo, ProcessInfo = pInfo };
-
-                    string send = JsonSerializer.Serialize<ChosenOne>(tempChosen,new JsonSerializerOptions() { WriteIndented = true});
-
-                    eventLog1.WriteEntry(send, EventLogEntryType.Information, eventID++);
-
-                    data = Encoding.UTF8.GetBytes(send);
-                    ns.Write(data, 0, data.Length);
-                    eventLog1.WriteEntry("Полетели", EventLogEntryType.Information, eventID++);
-
-                }*/
 
                 ns.Close();
                 client.Close();
@@ -158,21 +140,6 @@ namespace ServicePart
 
             }
 
-
-
-
-
-
-
-
-            //TimeToStart(null, null);
-
-            /*
-            timer =  new Timer(); //Настройка таймера
-            timer.Interval = 1000;
-            timer.Elapsed += new ElapsedEventHandler(this.TimeToStart);
-            timer.Start();
-            */
         }
 
         protected override void OnStop()
@@ -359,12 +326,26 @@ namespace ServicePart
 
         }
 
+        //TODO ну это явно костыль ебучий. Нужно фиксить
         void GetScreen()
         {
+
+            string[] paths = new string[] { Application.StartupPath, "\\..", "\\..", "\\Scatman\\bin\\Debug\\Scatman.exe" };
+
+            eventLog1.WriteEntry("Попытка запустить скринер");
+            Process Scatman = new Process();
+            Scatman.StartInfo.FileName = Path.Combine(Path.GetDirectoryName(Path.GetDirectoryName(Application.StartupPath)), "Scatman\\bin\\Debug\\Scatman.exe");
+            Scatman.Start();
+            while (!Scatman.HasExited)
+                Thread.Sleep(500);
+            bmp = new Bitmap(Path.GetTempPath() + "\\Scatman.png");
+
+
+            /*                
             bmp = new Bitmap(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height);
             Graphics g = Graphics.FromImage(bmp as Image);
             g.CopyFromScreen(0, 0, 0, 0, bmp.Size); //тут падает?
-
+            */
             //jpeg = Translate(bmp);
 
         }
@@ -392,6 +373,6 @@ namespace ServicePart
     {
         public PcInfo PcInfo { get; set; }
         public ProcessInfo ProcessInfo { get; set; }
-        public Bitmap Bmp { get; set; }
+        //public Bitmap Bmp { get; set; }
     }
 }
