@@ -117,7 +117,7 @@
                         </GroupItem>
 
 
-                        <Image Grid.Row="1" Source="{Binding Jpeg}"  Margin="10 5 10 5"  Stretch="Fill" />
+                        <Image Grid.Row="1" Source="{Binding JPEG}"  Margin="10 5 10 5"  Stretch="Fill" />
                         <Button Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0 0 10 5 " Content="Ѡ" Command="{Binding UpdateJPEG}"/>
 
                     </Grid>
@@ -132,7 +132,7 @@
                                     <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Path=Name}"/>
                                     <!--<GridViewColumn Header="User"/>-->
                                     <GridViewColumn Header="CPU %" DisplayMemberBinding="{Binding Path=Cpu}"/>
-                                    <GridViewColumn Header="RAM %" DisplayMemberBinding="{Binding Path=Ram}"/>
+                                    <GridViewColumn Header="RAM (Working Set)" DisplayMemberBinding="{Binding Path=Ram}"/>
                                     <!--<GridViewColumn Header="Description"/>-->
                                 </GridView>
                             </ListView.View>

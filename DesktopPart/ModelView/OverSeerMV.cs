@@ -76,7 +76,7 @@ namespace DesktopPart.ModelView
                         PInfo = SelectedPCInfo.ProcessInfo;
                     }
 
-
+                    JPEG = DoJpegMessage();
 
                 });
 
@@ -159,7 +159,7 @@ namespace DesktopPart.ModelView
         {
             Bitmap jpeg = null;
            
-           //try
+           try
             {
                 byte[] data = Encoding.UTF8.GetBytes("GetJpeg");
 
@@ -173,60 +173,53 @@ namespace DesktopPart.ModelView
                 NetworkStream ns = client.GetStream();
                 ns.Write(data, 0, data.Length);
 
-                int bytesRead = ns.Read(leng, 0, 4);
-                dataLeng = BitConverter.ToInt32(leng,0);
+                int bytesRead = ns.Read(leng, 0, 4); // TODO Убрать
+                dataLeng = BitConverter.ToInt32(leng,0); // TODO Убрать
 
-                byte[] byteJpeg = new byte[dataLeng];
+                jpeg = new Bitmap(ns);
 
-                bytesRead = ns.Read(byteJpeg, 0, byteJpeg.Length);
-                
-
-                
 
                 ns.Close();
                 client.Close();
 
-                using (MemoryStream ms = new MemoryStream(byteJpeg))
-                {
-                    jpeg = new Bitmap(ms);
-                    jpeg.Save(@"D:\Desktop\Ass.png", ImageFormat.Png);
-                    // Падает, сука
-                    // A generic error occurred in GDI+
-                }
-
 
                 BitmapImage returnal = new BitmapImage();
 
-                returnal = Translate(byteJpeg);
+                returnal = Translate(jpeg);
 
                 return returnal;
 
 
 
             }
-           // catch (Exception e )
+            catch (Exception e )
             {
 
-               // MessageBox.Show("Lost connection\n" + e.Message);
-                //return null;
-                
+                MessageBox.Show("Lost connection\n" + e.Message);
+                return null;
+
             }
 
-           
+
 
         }
 
 
-        private BitmapImage Translate(byte[] data)
+        private BitmapImage Translate(Bitmap jpeg)
         {
-            using (MemoryStream ms = new MemoryStream(data))
+            using (MemoryStream ms = new MemoryStream())
             {
-               
+                jpeg.Save(ms, ImageFormat.Png);
+                ms.Position = 0;
+
                 BitmapImage bmp = new BitmapImage();
                 bmp.BeginInit();
                 bmp.StreamSource = ms;
                 bmp.CacheOption = BitmapCacheOption.OnLoad;
                 bmp.EndInit();
+                bmp.Freeze();
+
+                
 
                 return bmp;
             }

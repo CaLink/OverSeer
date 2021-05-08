@@ -22,7 +22,7 @@ namespace DesktopPart.Model
         public string Name { get; set; }
         //public string User { get; set; }
         public int Cpu { get; set; }
-        public long Ram { get; set; }
+        public ulong Ram { get; set; }
         //public string Description { get; set; }
 
     }

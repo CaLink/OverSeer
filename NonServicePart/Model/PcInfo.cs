@@ -12,7 +12,10 @@ namespace NonServicePart.Model
         public int Cores { get; set; }
         public int LogicalProcessors { get; set; }
         public string SocketName { get; set; }
-        public ulong Ram { get; set; }
+        ulong ram;
+        public ulong Ram { get { return ram; } 
+            set {ram = (ulong)Math.Round(value / 1048576.0); } }
+        
 
         public string SystemName { get; set; }
         public string OSArchitecture { get; set; }

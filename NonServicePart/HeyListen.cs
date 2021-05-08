@@ -246,7 +246,7 @@ namespace NonServicePart
                     newProc.ID = int.Parse(queryObj["IDProcess"].ToString());
                     newProc.Name = queryObj["Name"].ToString();
                     newProc.Cpu = int.Parse(queryObj["PercentProcessorTime"].ToString());
-                    newProc.Ram = long.Parse(queryObj["WorkingSet"].ToString());
+                    newProc.Ram = ulong.Parse(queryObj["WorkingSet"].ToString());
 
                     pInfo.ProcessList.Add(newProc);
                 }
@@ -337,11 +337,18 @@ namespace NonServicePart
                 mes = ms.ToArray();
             }
 
+            bmp.Save("ass.png", ImageFormat.Png);
+
             length = BitConverter.GetBytes(mes.Length);
             ret = new byte[4 + mes.Length];
             length.CopyTo(ret, 0);
             mes.CopyTo(ret, 4);
 
+            int test = 0;
+            foreach (var item in mes)
+            {
+                test += item;
+            }
 
             return ret;
         }

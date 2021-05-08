@@ -11,8 +11,10 @@ namespace NonServicePart.Model
         public string Drive { get; set; }
         public string DriveType { get; set; }
         public string FileSystem { get; set; }
-        public long AvailabeSpace { get; set; }
-        public long TotalSize { get; set; }
+        long availabeSpace;
+        public long AvailabeSpace { get {return availabeSpace; } set {availabeSpace = (long)Math.Round(value / 1073741824.0); } }
+        long totalSize;
+        public long TotalSize { get {return totalSize; } set {totalSize = (long)Math.Round(value/ 1073741824.0); } }
 
 
         public Disk()
