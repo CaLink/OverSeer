@@ -64,6 +64,7 @@
       <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.5.0.0\lib\net45\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
     </Reference>
     <Reference Include="System.Text.Json, Version=4.0.1.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -84,6 +85,7 @@
     </ApplicationDefinition>
     <Compile Include="ModelView\AddPCMV.cs" />
     <Compile Include="ModelView\EditMV.cs" />
+    <Compile Include="ModelView\PickShowerMV.cs" />
     <Compile Include="Model\ChosenOne.cs" />
     <Compile Include="Model\Data.cs" />
     <Compile Include="Model\PC.cs" />
@@ -98,6 +100,9 @@
     </Compile>
     <Compile Include="View\OverSeerV.xaml.cs">
       <DependentUpon>OverSeerV.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\PickShowerV.xaml.cs">
+      <DependentUpon>PickShowerV.xaml</DependentUpon>
     </Compile>
     <Page Include="CUstoM\UserControl1.xaml">
       <SubType>Designer</SubType>
@@ -122,6 +127,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\OverSeerV.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\PickShowerV.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

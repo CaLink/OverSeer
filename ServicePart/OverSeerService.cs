@@ -102,7 +102,7 @@ namespace ServicePart
                         GetInfo();
                         GetProccessInfo();
 
-                        //Todo
+                        
                         //GetScreen();
                         //ChosenOne tempChosen = new ChosenOne() { PcInfo = pcInfo, ProcessInfo = pInfo, Bmp = bmp };
                         

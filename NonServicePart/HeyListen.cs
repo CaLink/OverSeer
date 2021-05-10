@@ -111,8 +111,6 @@ namespace NonServicePart
         {
             ChosenOne tempChosen = new ChosenOne();
             ProcessInfo tempPI = new ProcessInfo();
-            //TODO Bitmap
-            //Bitmap bmp;
             string mes = "";
             byte[] preparedMessage = new byte[0];
 
@@ -321,7 +319,6 @@ namespace NonServicePart
         }
 
 
-        //TODO Ну сделать нада
         byte[] GetJpeg()
         {
             byte[] ret;

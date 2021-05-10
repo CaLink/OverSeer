@@ -20,9 +20,10 @@ namespace DesktopPart.ModelView
     public class OverSeerMV : NotifyModel
     {
         public ObservableCollection<PC> PCs { get; set; }
+        public ObservableCollection<PcGroupe> PcGroupes { get; set; }
 
         PC selectedPC;
-        public PC SelectedPC { get { return selectedPC; } set { selectedPC = value; } }
+        public PC SelectedPC { get { return selectedPC; } set { selectedPC = value; Data.Pc = value;     } }
         public ChosenOne SelectedPCInfo { get; set; }
 
         private PcInfo pcInfo;
@@ -36,17 +37,15 @@ namespace DesktopPart.ModelView
 
         
 
-
-
-
         public CustomCUMmand<string> OpenSMT { get; set; }
         public CustomCUMmand<string> GetInfo { get; set; }
         public CustomCUMmand<string> UpdateJPEG{ get; set; }
+        public CustomCUMmand<string> ShowPick { get; set; }
 
         public OverSeerMV()
         {
             Init();
-            
+
             OpenSMT = new CustomCUMmand<string>(
                 (s) =>
                 {
@@ -87,7 +86,20 @@ namespace DesktopPart.ModelView
                 },
                 () => 
                 {
-                    if (selectedPC == null)
+                    if (SelectedPC == null)
+                        return false;
+                    else
+                        return true;
+                });
+
+            ShowPick = new CustomCUMmand<string>(
+                (s) =>
+                {
+                    new PickShowerV().Show();
+                },
+                ()=> 
+                {
+                    if (SelectedPC == null)
                         return false;
                     else
                         return true;
@@ -98,6 +110,22 @@ namespace DesktopPart.ModelView
         
 
         private void Init()
+        {
+            using (FileStream fs = new FileStream("Pc.Groupe", FileMode.OpenOrCreate, FileAccess.Read))
+            using (StreamReader sr = new StreamReader(fs))
+            {
+                Data.PcGroupe = new ObservableCollection<PcGroupe>();
+                PcGroupes = Data.PcGroupe;
+                string json = sr.ReadToEnd();
+                if (string.IsNullOrEmpty(json))
+                    return;
+
+                Data.PcGroupe = JsonSerializer.Deserialize<ObservableCollection<PcGroupe>>(json);
+                PcGroupes = Data.PcGroupe;
+            }
+        }
+        
+        private void TestInit()
         {
             using (FileStream fs = new FileStream("PC.List", FileMode.OpenOrCreate, FileAccess.Read))
             using (StreamReader sr = new StreamReader(fs))
@@ -114,7 +142,7 @@ namespace DesktopPart.ModelView
 
         }
 
-        private string DoMessage(string message)
+        public string DoMessage(string message)
         {
             string retMess = "";
             try
@@ -186,6 +214,7 @@ namespace DesktopPart.ModelView
                 BitmapImage returnal = new BitmapImage();
 
                 returnal = Translate(jpeg);
+                Data.Bmp = returnal;
 
                 return returnal;
 

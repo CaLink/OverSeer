@@ -15,4 +15,15 @@ namespace DesktopPart.Model
 
         
     }
+
+    public class PcGroupe
+    {
+        public string Name { get; set; }
+        public ObservableCollection<PC> PCs { get; set; }
+
+        public PcGroupe()
+        {
+            PCs = new ObservableCollection<PC>();
+        }
+    }
 }
