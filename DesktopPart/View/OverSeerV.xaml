@@ -44,8 +44,12 @@
             </ListBox>
             -->
 
-            
-            <TreeView Margin="0 5 0 2" ItemsSource="{Binding PcGroupes}">
+            <custom:CUstoMTreeView Margin="0 5 0 2" ItemsSource="{Binding PcGroupes}" CUstoMSelectedItem="{Binding SelectedPC ,Mode=TwoWay}">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="MouseDoubleClick">
+                        <i:InvokeCommandAction Command="{Binding GetInfo}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
                 <TreeView.ItemTemplate>
                     <HierarchicalDataTemplate ItemsSource="{Binding PCs}" >
                         <TextBlock Text="{Binding Name}"/>
@@ -56,8 +60,8 @@
                         </HierarchicalDataTemplate.ItemTemplate>
                     </HierarchicalDataTemplate>
                 </TreeView.ItemTemplate>
-            </TreeView>
-            
+            </custom:CUstoMTreeView>
+
         </GroupBox>
 
         <Grid Grid.Column="1" Grid.Row="1" Visibility="{Binding Converter}">

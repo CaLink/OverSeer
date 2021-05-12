@@ -27,18 +27,34 @@ namespace DesktopPart.View
         {
             InitializeComponent();
 
+
+
+
             size = Screen.PrimaryScreen.Bounds.Size;
 
             if (Data.Bmp.Height > size.Height)
-                this.Height = size.Height;
+                this.Height = size.Height - (size.Height / 10);
             else
-                this.Height = Data.Bmp.Height;
+                this.Height = Data.Bmp.Height - (Data.Bmp.Height/10);
 
             if (Data.Bmp.Width > size.Width)
-                this.Width = size.Width;
+                this.Width = size.Width - (size.Width / 10);
             else
-                this.Width = Data.Bmp.Width;
+                this.Width = Data.Bmp.Width - (Data.Bmp.Width/ 10);
 
+
+            var position = SystemParameters.WorkArea;
+            Left = position.Left + (position.Right/20);
+            Top = position.Top + (position.Bottom/20);
+
+        }
+
+        private void Close(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ChangedButton == MouseButton.Left && e.ClickCount == 2)
+            {
+                this.Close();
+            }
         }
     }
 }

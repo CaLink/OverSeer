@@ -30,6 +30,14 @@ namespace NonServicePart
         JsonSerializerOptions jso = new JsonSerializerOptions() { WriteIndented = true };
 
 
+        ManagementObjectSearcher searcher1 = new ManagementObjectSearcher("root\\CIMV2", "SELECT Name,NumberOfCores,NumberOfLogicalProcessors,SocketDesignation,SystemName FROM Win32_Processor");
+        ManagementObjectSearcher searcher2 = new ManagementObjectSearcher("root\\CIMV2", "SELECT OSArchitecture,Caption,TotalVisibleMemorySize FROM Win32_OperatingSystem");
+        ManagementObjectSearcher searcher3 = new ManagementObjectSearcher("root\\CIMV2", "SELECT IDProcess,Name,PercentProcessorTime,WorkingSet FROM Win32_PerfFormattedData_PerfProc_Process");
+        ManagementObjectSearcher searcher4 = new ManagementObjectSearcher("root\\CIMV2", "SELECT PercentProcessorTime FROM Win32_PerfFormattedData_PerfOS_Processor");
+        ManagementObjectSearcher searcher5 = new ManagementObjectSearcher("root\\CIMV2", "SELECT FreePhysicalMemory,TotalVisibleMemorySize FROM Win32_OperatingSystem");
+        ManagementObjectSearcher searcher6 = new ManagementObjectSearcher("root\\CIMV2", "SELECT LoadPercentage FROM Win32_Processor");
+
+
         public HeyListen(string ip = "127.0.0.1")
         {
             if (!EventLog.SourceExists("OverSeerServ"))
@@ -53,6 +61,16 @@ namespace NonServicePart
             string mes;
             byte[] send;
 
+            try
+            {
+                searcher3.Get();
+            }
+            catch (Exception e)
+            {
+                logs.WriteEntry($"{DateTime.Now}\n" + e.ToString(), EventLogEntryType.Error, logsID++);
+            }
+
+
             hey.Start();
             logs.WriteEntry($"{DateTime.Now}\nHey, Listen", EventLogEntryType.Information, logsID++);
 
@@ -74,13 +92,13 @@ namespace NonServicePart
 
                 ns.Write(send, 0, send.Length);
 
-                logs.WriteEntry($"{DateTime.Now}\nVAINT" , EventLogEntryType.Information, logsID++);
+                logs.WriteEntry($"{DateTime.Now}\nVAINT", EventLogEntryType.Information, logsID++);
 
                 ns.Close();
                 client.Close();
 
                 logs.WriteEntry($"{DateTime.Now}\nSessionEnd", EventLogEntryType.Information, logsID++);
-            
+
             }
         }
 
@@ -139,7 +157,7 @@ namespace NonServicePart
 
                 case "GetJpeg":
                     preparedMessage = GetJpeg();
-                    logs.WriteEntry($"{DateTime.Now}\n" + preparedMessage.Length,EventLogEntryType.Information,logsID++);
+                    logs.WriteEntry($"{DateTime.Now}\n" + preparedMessage.Length, EventLogEntryType.Information, logsID++);
 
                     break;
 
@@ -154,12 +172,11 @@ namespace NonServicePart
         PcInfo GetInfo()
         {
             PcInfo pcInfo = new PcInfo();
-            
+
+            // PcInfo
             try
             {
-                ManagementObjectSearcher searcher = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_Processor");
-
-                foreach (ManagementObject queryObj in searcher.Get())
+                foreach (ManagementObject queryObj in searcher1.Get())
                 {
                     pcInfo.CpuName = queryObj["Name"].ToString();
                     pcInfo.Cores = int.Parse(queryObj["NumberOfCores"].ToString());
@@ -174,12 +191,12 @@ namespace NonServicePart
 
                 logs.WriteEntry($"{DateTime.Now}\n" + e.ToString(), EventLogEntryType.Error, logsID++);
             }
-
+            // PcInfo
             try
             {
-                ManagementObjectSearcher searcher = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_OperatingSystem");
+                
 
-                foreach (ManagementObject queryObj in searcher.Get())
+                foreach (ManagementObject queryObj in searcher2.Get())
                 {
                     pcInfo.OSArchitecture = queryObj["OSArchitecture"].ToString();
                     pcInfo.OSVersion = queryObj["Caption"].ToString();
@@ -192,7 +209,7 @@ namespace NonServicePart
 
                 logs.WriteEntry($"{DateTime.Now}\n" + e.ToString(), EventLogEntryType.Error, logsID++);
             }
-
+            // DiskInfo
             try
             {
 
@@ -235,10 +252,11 @@ namespace NonServicePart
             // ProcessInfo
             try
             {
-                ManagementObjectSearcher searcher = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_PerfFormattedData_PerfProc_Process");
+                
+
                 Proc newProc = new Proc();
 
-                foreach (ManagementObject queryObj in searcher.Get())
+                foreach (ManagementObject queryObj in searcher3.Get())
                 {
 
                     newProc.ID = int.Parse(queryObj["IDProcess"].ToString());
@@ -259,9 +277,9 @@ namespace NonServicePart
             // COREs%
             try
             {
-                ManagementObjectSearcher searcher = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_PerfFormattedData_PerfOS_Processor");
 
-                foreach (ManagementObject queryObj in searcher.Get())
+
+                foreach (ManagementObject queryObj in searcher4.Get())
                 {
                     pInfo.CpuLoadByCore.Add(int.Parse(queryObj["PercentProcessorTime"].ToString()));
                 }
@@ -275,9 +293,9 @@ namespace NonServicePart
             // %RAM%
             try
             {
-                ManagementObjectSearcher searcher = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_OperatingSystem");
+                
 
-                foreach (ManagementObject item in searcher.Get())
+                foreach (ManagementObject item in searcher5.Get())
                 {
                     long free = long.Parse(item["FreePhysicalMemory"].ToString());
                     long total = long.Parse(item["TotalVisibleMemorySize"].ToString());
@@ -294,12 +312,13 @@ namespace NonServicePart
 
             }
 
+            // CPU%
             try
             {
-                ManagementObjectSearcher searcher = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_Processor");
 
 
-                foreach (ManagementObject item in searcher.Get())
+
+                foreach (ManagementObject item in searcher6.Get())
                 {
                     int percentCpu = int.Parse(item["LoadPercentage"].ToString());
                     pInfo.CpuTotal = percentCpu;
@@ -351,7 +370,7 @@ namespace NonServicePart
         }
     }
 
-    
+
 
 
 

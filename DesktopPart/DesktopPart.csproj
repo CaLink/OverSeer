@@ -83,6 +83,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="CUstoM\CUstoMTreeView.cs" />
     <Compile Include="ModelView\AddPCMV.cs" />
     <Compile Include="ModelView\EditMV.cs" />
     <Compile Include="ModelView\PickShowerMV.cs" />

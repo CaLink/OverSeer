@@ -23,7 +23,7 @@ namespace DesktopPart.ModelView
         public ObservableCollection<PcGroupe> PcGroupes { get; set; }
 
         PC selectedPC;
-        public PC SelectedPC { get { return selectedPC; } set { selectedPC = value; Data.Pc = value;     } }
+        public PC SelectedPC { get { return selectedPC; } set { selectedPC  = value as PC; Data.Pc = value as PC;} }
         public ChosenOne SelectedPCInfo { get; set; }
 
         private PcInfo pcInfo;
@@ -95,7 +95,8 @@ namespace DesktopPart.ModelView
             ShowPick = new CustomCUMmand<string>(
                 (s) =>
                 {
-                    new PickShowerV().Show();
+                    new PickShowerV().ShowDialog();
+                    JPEG = Data.Bmp;
                 },
                 ()=> 
                 {

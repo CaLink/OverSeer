@@ -12,15 +12,12 @@
         <ViewModel:PickShowerMV x:Key="view"/>
     </Window.Resources>
     <Grid DataContext="{StaticResource view}">
-        <Image Source="{Binding BMP}">
+        <Image Source="{Binding BMP}"  MouseDown="Close">
             <Image.ContextMenu>
                 <ContextMenu>
                     <MenuItem Header="Save" Command="{Binding Save}"/>
                 </ContextMenu>
             </Image.ContextMenu>
-            <Image.InputBindings>
-                <MouseBinding MouseAction="LeftDoubleClick" Command="{Binding ShowPick}"/>
-            </Image.InputBindings>
         </Image>
 
         <Button Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0 0 10 5 " Content="Ѡ" Command="{Binding Refresh}"/>
