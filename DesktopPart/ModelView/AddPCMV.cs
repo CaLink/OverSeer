@@ -1,4 +1,5 @@
 ﻿using DesktopPart.Model;
+using DesktopPart.View;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,8 +23,10 @@ namespace DesktopPart.ModelView
                 (s) => 
                 {
                     NewPC = new PC() { IP = Ip, Name = Name};
-                    Data.PCs.Add(NewPC);
-                    
+                    Data.Pc = NewPC;
+
+
+                    Manager.Close(typeof(AddPC));
                 },()=>
                 {
                     if (string.IsNullOrEmpty(Name) || string.IsNullOrEmpty(Ip))

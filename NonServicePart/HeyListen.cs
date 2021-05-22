@@ -32,7 +32,7 @@ namespace NonServicePart
 
         ManagementObjectSearcher searcher1 = new ManagementObjectSearcher("root\\CIMV2", "SELECT Name,NumberOfCores,NumberOfLogicalProcessors,SocketDesignation,SystemName FROM Win32_Processor");
         ManagementObjectSearcher searcher2 = new ManagementObjectSearcher("root\\CIMV2", "SELECT OSArchitecture,Caption,TotalVisibleMemorySize FROM Win32_OperatingSystem");
-        ManagementObjectSearcher searcher3 = new ManagementObjectSearcher("root\\CIMV2", "SELECT IDProcess,Name,PercentProcessorTime,WorkingSet FROM Win32_PerfFormattedData_PerfProc_Process");
+        ManagementObjectSearcher searcher3 = new ManagementObjectSearcher("root\\CIMV2", "SELECT IDProcess,Name,PercentProcessorTime,WorkingSetPrivate FROM Win32_PerfFormattedData_PerfProc_Process");
         ManagementObjectSearcher searcher4 = new ManagementObjectSearcher("root\\CIMV2", "SELECT PercentProcessorTime FROM Win32_PerfFormattedData_PerfOS_Processor");
         ManagementObjectSearcher searcher5 = new ManagementObjectSearcher("root\\CIMV2", "SELECT FreePhysicalMemory,TotalVisibleMemorySize FROM Win32_OperatingSystem");
         ManagementObjectSearcher searcher6 = new ManagementObjectSearcher("root\\CIMV2", "SELECT LoadPercentage FROM Win32_Processor");
@@ -262,7 +262,10 @@ namespace NonServicePart
                     newProc.ID = int.Parse(queryObj["IDProcess"].ToString());
                     newProc.Name = queryObj["Name"].ToString();
                     newProc.Cpu = int.Parse(queryObj["PercentProcessorTime"].ToString());
-                    newProc.Ram = ulong.Parse(queryObj["WorkingSet"].ToString());
+                    newProc.Ram = ulong.Parse(queryObj["WorkingSetPrivate"].ToString()); //Or WorkingSet
+
+                    if (newProc.Name == "Idle" || newProc.Name == "_Total")
+                        continue;
 
                     pInfo.ProcessList.Add(newProc);
                 }
@@ -325,7 +328,7 @@ namespace NonServicePart
                 }
 
             }
-            catch (ManagementException e)
+            catch (Exception e)
             {
 
                 logs.WriteEntry($"{DateTime.Now}\nAn error occurred while querying for WMI data: " + e.Message, EventLogEntryType.Error, logsID++);

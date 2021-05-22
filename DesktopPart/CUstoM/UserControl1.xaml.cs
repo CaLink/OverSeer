@@ -23,7 +23,18 @@ namespace DesktopPart.CUstoM
     /// </summary>
     public partial class UserControl1 : UserControl
     {
-        public SeriesCollection SeriesCollection { get; set; }
+
+
+        public SeriesCollection SeriesCollection
+        {
+            get { return (SeriesCollection)GetValue(SeriesCollectionProperty); }
+            set { SetValue(SeriesCollectionProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for SeriesCollection.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty SeriesCollectionProperty =
+            DependencyProperty.Register("SeriesCollection", typeof(SeriesCollection), typeof(UserControl1));
+
         public string[] Labels { get; set; }
         public Func<double, string> YFormatter { get; set; }
 

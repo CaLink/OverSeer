@@ -97,7 +97,7 @@
 
                                 <StackPanel Grid.Column="1" Orientation="Horizontal">
                                     <Label Content="BOSS Of CPU"/>
-                                    <Label Content="%"/>
+                                    <Label Content="{Binding CpuBoss}"/>
                                 </StackPanel>
 
                                 <StackPanel Grid.Row="1" Orientation="Horizontal">
@@ -107,7 +107,7 @@
 
                                 <StackPanel Grid.Column="1" Grid.Row="1" Orientation="Horizontal">
                                     <Label Content="BOSS Of RAM"/>
-                                    <Label Content="%"/>
+                                    <Label Content="{Binding RamBoss}"/>
                                 </StackPanel>
 
                                 <StackPanel Grid.Row="2" Orientation="Horizontal">
@@ -134,7 +134,7 @@
                     </Grid>
                 </TabItem>
 
-                <TabItem Header="Performance">
+                <TabItem Header="Processes">
                     <GroupBox>
                         <ListView Margin=" 0 3 0 2" ItemsSource="{Binding PInfo.ProcessList}">
                             <ListView.View>
@@ -153,7 +153,7 @@
 
                 <TabItem Header="Graphs">
                     <GroupBox>
-                        <custom:UserControl1></custom:UserControl1>
+                        <custom:UserControl1  SeriesCollection="{Binding  }"></custom:UserControl1>
                     </GroupBox>
                 </TabItem>
 

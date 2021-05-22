@@ -1,5 +1,7 @@
 ﻿using DesktopPart.Model;
 using DesktopPart.View;
+using LiveCharts;
+using LiveCharts.Wpf;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -23,23 +25,34 @@ namespace DesktopPart.ModelView
         public ObservableCollection<PcGroupe> PcGroupes { get; set; }
 
         PC selectedPC;
-        public PC SelectedPC { get { return selectedPC; } set { selectedPC  = value as PC; Data.Pc = value as PC;} }
+        public PC SelectedPC { get { return selectedPC; } set { selectedPC = value as PC; Data.Pc = value as PC; } }
         public ChosenOne SelectedPCInfo { get; set; }
 
         private PcInfo pcInfo;
         public PcInfo PcInfo { get { return pcInfo; } set { pcInfo = value; RaiseEvent(nameof(PcInfo)); } }
 
         private ProcessInfo pInfo;
-        public ProcessInfo PInfo { get { return pInfo; } set { pInfo = value; RaiseEvent(nameof(PInfo)); }}
+        public ProcessInfo PInfo { get { return pInfo; } set { pInfo = value; RaiseEvent(nameof(PInfo)); } }
 
         private BitmapImage jpeg;
-        public BitmapImage JPEG { get { return jpeg; } set { jpeg = value; RaiseEvent(nameof(JPEG)); }}
+        public BitmapImage JPEG { get { return jpeg; } set { jpeg = value; RaiseEvent(nameof(JPEG)); } }
 
-        
+        private string cpuBoss;
+        public string CpuBoss { get { return cpuBoss; } set { cpuBoss = value; RaiseEvent(nameof(CpuBoss)); } }
+
+        private string ramBoss;
+        public string RamBoss { get { return ramBoss; } set { ramBoss = value; RaiseEvent(nameof(RamBoss)); } }
+
+        private SeriesCollection cpuChart;
+
+        public SeriesCollection CpuChart { get { return cpuChart; } set { cpuChart = value; } }
+
+
+
 
         public CustomCUMmand<string> OpenSMT { get; set; }
         public CustomCUMmand<string> GetInfo { get; set; }
-        public CustomCUMmand<string> UpdateJPEG{ get; set; }
+        public CustomCUMmand<string> UpdateJPEG { get; set; }
         public CustomCUMmand<string> ShowPick { get; set; }
 
         public OverSeerMV()
@@ -51,7 +64,7 @@ namespace DesktopPart.ModelView
                 {
                     switch (s)
                     {
-                        case "Edit": new EditV().ShowDialog(); break;
+                        case "Edit": Manager.AddWindowsOpen(new EditV()); break;
                         case "Log": break;
                         case "Settings": break;
                         case "About": break;
@@ -73,7 +86,26 @@ namespace DesktopPart.ModelView
                         SelectedPCInfo = JsonSerializer.Deserialize<ChosenOne>(getMess, new JsonSerializerOptions() { WriteIndented = true });
                         PcInfo = SelectedPCInfo.PcInfo;
                         PInfo = SelectedPCInfo.ProcessInfo;
+                        if (PInfo.ProcessList.Count != 0)
+                        {
+                            int temp = PInfo.ProcessList.Max(x => x.Cpu);
+                            Proc obj = PInfo.ProcessList.FirstOrDefault(a => a.Cpu == temp);
+
+                            CpuBoss = obj.Name + " ( " + obj.Cpu + "% )";
+
+                            ulong utemp = PInfo.ProcessList.Max(x => x.Ram);
+                            obj = PInfo.ProcessList.FirstOrDefault(a => a.Ram == utemp);
+
+                            RamBoss = obj.Name + " ( " + obj.Ram + "mb )";
+                        }
+
+
                     }
+
+                    CpuChart[0].Values.Add(PInfo.CpuTotal);
+                    if (CpuChart[0].Values.Count > 20)
+                        CpuChart[0].Values.RemoveAt(0);
+
 
                     JPEG = DoJpegMessage();
 
@@ -84,7 +116,7 @@ namespace DesktopPart.ModelView
                 {
                     JPEG = DoJpegMessage();
                 },
-                () => 
+                () =>
                 {
                     if (SelectedPC == null)
                         return false;
@@ -98,7 +130,7 @@ namespace DesktopPart.ModelView
                     new PickShowerV().ShowDialog();
                     JPEG = Data.Bmp;
                 },
-                ()=> 
+                () =>
                 {
                     if (SelectedPC == null)
                         return false;
@@ -108,7 +140,7 @@ namespace DesktopPart.ModelView
 
         }
 
-        
+
 
         private void Init()
         {
@@ -124,8 +156,18 @@ namespace DesktopPart.ModelView
                 Data.PcGroupe = JsonSerializer.Deserialize<ObservableCollection<PcGroupe>>(json);
                 PcGroupes = Data.PcGroupe;
             }
+
+            CpuChart = new SeriesCollection
+            {
+                new LineSeries
+                {
+                    Title = "CPU%", Values = new ChartValues<int>()
+                }
+            };
+
         }
-        
+
+        /*
         private void TestInit()
         {
             using (FileStream fs = new FileStream("PC.List", FileMode.OpenOrCreate, FileAccess.Read))
@@ -142,6 +184,7 @@ namespace DesktopPart.ModelView
             }
 
         }
+        */
 
         public string DoMessage(string message)
         {
@@ -170,7 +213,7 @@ namespace DesktopPart.ModelView
 
                 ns.Close();
                 client.Close();
-                
+
                 retMess = sb.ToString();
             }
             catch (Exception e)
@@ -187,8 +230,8 @@ namespace DesktopPart.ModelView
         private BitmapImage DoJpegMessage()
         {
             Bitmap jpeg = null;
-           
-           try
+
+            try
             {
                 byte[] data = Encoding.UTF8.GetBytes("GetJpeg");
 
@@ -203,7 +246,7 @@ namespace DesktopPart.ModelView
                 ns.Write(data, 0, data.Length);
 
                 int bytesRead = ns.Read(leng, 0, 4); // TODO Убрать
-                dataLeng = BitConverter.ToInt32(leng,0); // TODO Убрать
+                dataLeng = BitConverter.ToInt32(leng, 0); // TODO Убрать
 
                 jpeg = new Bitmap(ns);
 
@@ -222,7 +265,7 @@ namespace DesktopPart.ModelView
 
 
             }
-            catch (Exception e )
+            catch (Exception e)
             {
 
                 MessageBox.Show("Lost connection\n" + e.Message);
@@ -249,7 +292,7 @@ namespace DesktopPart.ModelView
                 bmp.EndInit();
                 bmp.Freeze();
 
-                
+
 
                 return bmp;
             }

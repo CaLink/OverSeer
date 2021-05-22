@@ -43,7 +43,10 @@ namespace DesktopPart.ModelView
             AddPC = new CustomCUMmand<string>(
                 (s) =>
                 {
-                    new AddPC().ShowDialog();
+                    Manager.AddWindowsOpen(new AddPC());
+                    if (Data.Pc != null)
+                        UnGroupe.PCs.Add(Data.Pc);
+                    Data.Pc = null;
                 });
 
 
@@ -53,12 +56,13 @@ namespace DesktopPart.ModelView
                 {
                     SaveFunc();
 
+                    Manager.Close(typeof(EditV));
                 });
 
             RemovePC = new CustomCUMmand<string>(
                 (s) =>
                 {
-                    Data.PCs.Remove(ChosenAllPC);
+                    UnGroupe.PCs.Remove(ChosenAllPC);
                 },
                 () =>
                 {
