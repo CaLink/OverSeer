@@ -35,6 +35,8 @@ namespace DesktopPart.ModelView
         public CustomCUMmand<string> Save { get; set; }
         public CustomCUMmand<string> Remove { get; set; }
         public CustomCUMmand<string> Add { get; set; }
+        public CustomCUMmand<string> AddGroupe { get; set; }
+        public CustomCUMmand<string> RemoveGroupe { get; set; }
 
         public EditMV()
         {
@@ -55,6 +57,8 @@ namespace DesktopPart.ModelView
                 (s) =>
                 {
                     SaveFunc();
+
+
 
                     Manager.Close(typeof(EditV));
                 });
@@ -78,7 +82,7 @@ namespace DesktopPart.ModelView
                     PC temp = ChosenGroupePC;
                     UnGroupe.PCs.Add(temp);
                     SelectedGroupe.PCs.Remove(temp);
-                    
+
                 },
                 () =>
                 {
@@ -98,6 +102,35 @@ namespace DesktopPart.ModelView
                 () =>
                 {
                     if (ChosenAllPC == null)
+                        return false;
+                    else
+                        return true;
+                });
+
+            AddGroupe = new CustomCUMmand<string>(
+                (s) =>
+                {
+                    SelectedGroupe = new PcGroupe { Name = "NewGroupe"};
+                    MainGroupe.Add(SelectedGroupe);
+                    
+                });
+
+
+            RemoveGroupe = new CustomCUMmand<string>(
+                (s) =>
+                {
+                    foreach (var item in SelectedGroupe.PCs)
+                    {
+                        UnGroupe.PCs.Add(item);
+                    }
+
+                    MainGroupe.Remove(SelectedGroupe);
+
+                    SelectedGroupe = null;
+                },
+                () =>
+                {
+                    if (SelectedGroupe == null)
                         return false;
                     else
                         return true;
@@ -139,6 +172,8 @@ namespace DesktopPart.ModelView
                 string json = JsonSerializer.Serialize<List<PcGroupe>>(temp, new JsonSerializerOptions() { WriteIndented = true });
                 sw.WriteLine(json);
             }
+
+            Data.PcGroupe = new ObservableCollection<PcGroupe>(temp);
         }
     }
 }

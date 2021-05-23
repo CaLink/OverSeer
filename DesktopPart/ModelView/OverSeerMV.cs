@@ -21,8 +21,9 @@ namespace DesktopPart.ModelView
 {
     public class OverSeerMV : NotifyModel
     {
-        public ObservableCollection<PC> PCs { get; set; }
-        public ObservableCollection<PcGroupe> PcGroupes { get; set; }
+        ObservableCollection<PcGroupe> pcGroupes;
+
+        public ObservableCollection<PcGroupe> PcGroupes { get { return pcGroupes; } set {pcGroupes =value;RaiseEvent(nameof(pcGroupes)); } }
 
         PC selectedPC;
         public PC SelectedPC { get { return selectedPC; } set { selectedPC = value as PC; Data.Pc = value as PC; } }
@@ -64,7 +65,7 @@ namespace DesktopPart.ModelView
                 {
                     switch (s)
                     {
-                        case "Edit": Manager.AddWindowsOpen(new EditV()); break;
+                        case "Edit": Manager.AddWindowsOpen(new EditV()); PcGroupes = Data.PcGroupe; break;
                         case "Log": break;
                         case "Settings": break;
                         case "About": break;
@@ -76,6 +77,8 @@ namespace DesktopPart.ModelView
                 {
                     if (SelectedPC == null)
                         return;
+
+                    //TODO Вообще бы тут еще сделать "Ping"
 
                     string message = "GetFullInfo";
                     string getMess = "";
