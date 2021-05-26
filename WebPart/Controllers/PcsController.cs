@@ -54,37 +54,20 @@ namespace WebPart.Controllers
 
         //Запрос всей обновляемой инфы по компу?
         // GET: api/Pcs/5
-        [ResponseType(typeof(Pc))]
+        [ResponseType(typeof(PcLoadInfoM))]
         public async Task<IHttpActionResult> GetPc(int id)
         {
-            Pc pc = await db.Pcs.FindAsync(id);
-            if (pc == null)
-            {
-                return NotFound();
-            }
-
+           
             PcLoadInfo pli = await db.PcLoadInfoes.FindAsync(id);
             if (pli == null)
             {
-                //Создать элемент с мервтыми параметрами
+                return NotFound(); //IDK
             }
 
-            List<PcDrive> pd = await db.PcDrives.Where(x => x.PcID == id).ToListAsync();
-            if (pd == null)
-            {
-                //Обработать винты
-            }
+            PcLoadInfoM ret = (PcLoadInfoM)pli;
 
-            PcGeneralInfo pgi = await db.PcGeneralInfoes.FindAsync(id);
-            if(pgi == null)
-            {
-                //Ну тут тоже обработать
-            }
-
-
-
-
-            return Ok(pc);
+           
+            return Ok(ret);
         }
 
         // PUT: api/Pcs/5
