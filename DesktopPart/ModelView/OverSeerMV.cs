@@ -23,7 +23,7 @@ namespace DesktopPart.ModelView
     {
         ObservableCollection<PcGroupe> pcGroupes;
 
-        public ObservableCollection<PcGroupe> PcGroupes { get { return pcGroupes; } set {pcGroupes =value;RaiseEvent(nameof(pcGroupes)); } }
+        public ObservableCollection<PcGroupe> PcGroupes { get { return pcGroupes; } set {pcGroupes =value;RaiseEvent(nameof(pcGroupes)); } } // Очень странно это работает
 
         PC selectedPC;
         public PC SelectedPC { get { return selectedPC; } set { selectedPC = value as PC; Data.Pc = value as PC; } }

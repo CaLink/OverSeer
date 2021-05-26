@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="1e7b7627a3f341609dbde0f982f8e54b" Name="Diagram1" ZoomLevel="72">
+        <EntityTypeShape EntityType="BasedModel.Log" Width="1.5" PointX="0.875" PointY="6.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="BasedModel.Pc" Width="1.5" PointX="3" PointY="5.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="BasedModel.PcDrive" Width="1.5" PointX="5.5" PointY="5.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="BasedModel.PcGeneralInfo" Width="1.5" PointX="4.375" PointY="9.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="BasedModel.PcGroup" Width="1.5" PointX="3.25" PointY="3.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="BasedModel.PcLoadInfo" Width="1.5" PointX="1.5" PointY="9.375" IsExpanded="true" />
+        <AssociationConnector Association="BasedModel.FK_Logs_Pc" ManuallyRouted="false" />
+        <AssociationConnector Association="BasedModel.FK_Pc_PcGroup" ManuallyRouted="false" />
+        <AssociationConnector Association="BasedModel.FK_PcDrive_Pc" ManuallyRouted="false" />
+        <AssociationConnector Association="BasedModel.FK_PcGeneralInfo_Pc" ManuallyRouted="false" />
+        <AssociationConnector Association="BasedModel.FK_PcLoadInfo_Pc" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
