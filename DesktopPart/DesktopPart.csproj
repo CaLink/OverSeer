@@ -63,6 +63,7 @@
     <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.5.0.0\lib\net45\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
     </Reference>
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Text.Json, Version=4.0.1.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
@@ -87,12 +88,13 @@
     <Compile Include="ModelView\AddPCMV.cs" />
     <Compile Include="ModelView\EditMV.cs" />
     <Compile Include="ModelView\PickShowerMV.cs" />
-    <Compile Include="Model\ChosenOne.cs" />
     <Compile Include="Model\Data.cs" />
+    <Compile Include="Model\HttpMessage.cs" />
+    <Compile Include="Model\LogsM.cs" />
     <Compile Include="Model\PC.cs" />
-    <Compile Include="Model\PcInfo.cs" />
-    <Compile Include="Model\PC_Groupe.cs" />
-    <Compile Include="Model\ProcessInfo.cs" />
+    <Compile Include="Model\PcDrive.cs" />
+    <Compile Include="Model\PcGeneralInfo.cs" />
+    <Compile Include="Model\PcLoadInfo.cs" />
     <Compile Include="View\AddPC.xaml.cs">
       <DependentUpon>AddPC.xaml</DependentUpon>
     </Compile>

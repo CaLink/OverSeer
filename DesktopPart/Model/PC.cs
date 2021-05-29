@@ -10,20 +10,23 @@ namespace DesktopPart.Model
 {
     public class PC
     {
+        public int id { get; set; }
         public string Name { get; set; }
         public string IP { get; set; }
-
+        public string Port { get; set; }
+        public List<PcDrive> DriveList { get; set; }
+        public PcGeneralInfo GeneralInfo { get; set; }
         
     }
 
     public class PcGroupe
     {
         public string Name { get; set; }
-        public ObservableCollection<PC> PCs { get; set; }
+        public ObservableCollection<PC> PcMs { get; set; }
 
         public PcGroupe()
         {
-            PCs = new ObservableCollection<PC>();
+            PcMs = new ObservableCollection<PC>();
         }
     }
 }

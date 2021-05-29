@@ -11,7 +11,6 @@ namespace WebPart.Models
         public string Name { get; set; }
         public string IP { get; set; }
         public int Port { get; set; }
-        public int GroupID { get; set; }
         public List<PcDriveM> DriveList { get; set; }
         public PcGeneralInfoM GeneralInfo{ get; set; }
 
@@ -26,7 +25,6 @@ namespace WebPart.Models
                 Name = from.Name,
                 IP = from.IP,
                 Port = from.Port,
-                GroupID = from.PcGroupID
                 
             };
 

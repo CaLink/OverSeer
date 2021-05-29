@@ -51,7 +51,7 @@
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
                 <TreeView.ItemTemplate>
-                    <HierarchicalDataTemplate ItemsSource="{Binding PCs}" >
+                    <HierarchicalDataTemplate ItemsSource="{Binding PcMs}" >
                         <TextBlock Text="{Binding Name}"/>
                         <HierarchicalDataTemplate.ItemTemplate>
                             <DataTemplate>
@@ -92,7 +92,7 @@
 
                                 <StackPanel Orientation="Horizontal">
                                     <Label Content="CPU Usage"/>
-                                    <Label Content="{Binding PInfo.CpuTotal}" ContentStringFormat=" {0}%"/>
+                                    <Label Content="{Binding PcLoad.CpuLoad}" ContentStringFormat=" {0}%"/>
                                 </StackPanel>
 
                                 <StackPanel Grid.Column="1" Orientation="Horizontal">
@@ -102,7 +102,7 @@
 
                                 <StackPanel Grid.Row="1" Orientation="Horizontal">
                                     <Label Content="RAM Usage"/>
-                                    <Label Content="{Binding PInfo.TotalRamLoad}" ContentStringFormat=" {0}%"/>
+                                    <Label Content="{Binding PcLoad.RamLoad}" ContentStringFormat=" {0}%"/>
                                 </StackPanel>
 
                                 <StackPanel Grid.Column="1" Grid.Row="1" Orientation="Horizontal">
@@ -110,15 +110,6 @@
                                     <Label Content="{Binding RamBoss}"/>
                                 </StackPanel>
 
-                                <StackPanel Grid.Row="2" Orientation="Horizontal">
-                                    <Label Content="IDC Usage"/>
-                                    <Label Content="%"/>
-                                </StackPanel>
-
-                                <StackPanel Grid.Column="1" Grid.Row="2" Orientation="Horizontal">
-                                    <Label Content="BOSS Of IDC"/>
-                                    <Label Content="%"/>
-                                </StackPanel>
                             </Grid>
 
                         </GroupItem>
@@ -179,27 +170,27 @@
                             </Grid.RowDefinitions>
 
                             <Label Grid.Column="0" Grid.Row="0" Content="CPU"/>
-                            <Label Grid.Column="1" Grid.Row="0" Content="{Binding PcInfo.CpuName}"/>
+                            <Label Grid.Column="1" Grid.Row="0" Content="{Binding SelectedPC.GeneralInfo.Cpu}"/>
                             <Label Grid.Column="0" Grid.Row="1" Content="Cores"/>
-                            <Label Grid.Column="1" Grid.Row="1" Content="{Binding PcInfo.Cores}"/>
+                            <Label Grid.Column="1" Grid.Row="1" Content="{Binding SelectedPC.GeneralInfo.Cores}"/>
                             <Label Grid.Column="0" Grid.Row="2" Content="Logical Processors"/>
-                            <Label Grid.Column="1" Grid.Row="2" Content="{Binding PcInfo.LogicalProcessors}"/>
+                            <Label Grid.Column="1" Grid.Row="2" Content="{Binding SelectedPC.GeneralInfo.LogicalProcessors}"/>
                             <Label Grid.Column="0" Grid.Row="3" Content="Socket"/>
-                            <Label Grid.Column="1" Grid.Row="3" Content="{Binding PcInfo.SocketName}"/>
+                            <Label Grid.Column="1" Grid.Row="3" Content="{Binding SelectedPC.GeneralInfo.Socket}"/>
                             <Label Grid.Column="0" Grid.Row="4" Content="RAM"/>
-                            <Label Grid.Column="1" Grid.Row="4" Content="{Binding PcInfo.Ram}"/>
+                            <Label Grid.Column="1" Grid.Row="4" Content="{Binding SelectedPC.GeneralInfo.Ram}"/>
 
                             <Label Grid.Column="0" Grid.Row="5" Content=""/>
                             <Label Grid.Column="1" Grid.Row="5" Content=""/>
 
                             <Label Grid.Column="0" Grid.Row="6" Content="System Name"/>
-                            <Label Grid.Column="1" Grid.Row="6" Content="{Binding PcInfo.SystemName}"/>
+                            <Label Grid.Column="1" Grid.Row="6" Content="{Binding SelectedPC.GeneralInfo.SystemName}"/>
                             <Label Grid.Column="0" Grid.Row="7" Content="OS Architecture"/>
-                            <Label Grid.Column="1" Grid.Row="7" Content="{Binding PcInfo.OSArchitecture}"/>
+                            <Label Grid.Column="1" Grid.Row="7" Content="{Binding SelectedPC.GeneralInfo.OsArchitecture}"/>
                             <Label Grid.Column="0" Grid.Row="8" Content="OS Version"/>
-                            <Label Grid.Column="1" Grid.Row="8" Content="{Binding PcInfo.OSVersion}"/>
+                            <Label Grid.Column="1" Grid.Row="8" Content="{Binding SelectedPC.GeneralInfo.OsVersion}"/>
 
-                            <ListView Grid.ColumnSpan="2" Grid.Row="9" ItemsSource="{Binding PcInfo.Drives}" Margin="0 7 0 0">
+                            <ListView Grid.ColumnSpan="2" Grid.Row="9" ItemsSource="{Binding SelectedPC.DriveList}" Margin="0 7 0 0">
                                 <ListView.View>
                                     <GridView>
                                         <GridViewColumn DisplayMemberBinding="{Binding Path=Drive}" Header="Drive" >

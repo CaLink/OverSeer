@@ -40,6 +40,7 @@ namespace DesktopPart.ModelView
 
         public EditMV()
         {
+            /*
             Init();
 
             AddPC = new CustomCUMmand<string>(
@@ -135,7 +136,7 @@ namespace DesktopPart.ModelView
                     else
                         return true;
                 });
-
+            */
         }
 
         void Init()

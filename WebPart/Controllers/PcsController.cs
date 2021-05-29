@@ -23,8 +23,9 @@ namespace WebPart.Controllers
         // GET: api/Pcs
         public List<PcGroupM> GetPcs()
         {
-            List<PcGroup> tempPcGroupList =  db.PcGroups.ToListAsync().Result;
+            List<PcGroup> tempPcGroupList = db.PcGroups.ToListAsync().Result;
             List<Pc> tempPcList = db.Pcs.ToListAsync().Result;
+            List<PcDrive> driveList = db.PcDrives.ToListAsync().Result;
 
             List<PcGroupM> groupList = new List<PcGroupM>();
             tempPcGroupList.ForEach(x => groupList.Add((PcGroupM)x));
@@ -32,14 +33,34 @@ namespace WebPart.Controllers
             List<PcM> pcList = new List<PcM>();
             tempPcList.ForEach(x => pcList.Add((PcM)x));
 
+            groupList.ForEach(x =>
+            {
+                x.PcMs = new List<PcM>();
+                
+                tempPcList.Where(z => z.PcGroupID == x.id).ToList().ForEach(z =>
+                {
+                    PcM PMs = (PcM)z;
+                    PMs.DriveList = new List<PcDriveM>();
+                    driveList.Where(c => c.PcID == z.id).ToList().ForEach(c=> PMs.DriveList.Add((PcDriveM)c));
+                    PMs.GeneralInfo = db.PcGeneralInfoes.Find(z.id);
+
+                    x.PcMs.Add(PMs);
+                     
+                    });
+                
+            });
+
+
+
+            /*
             pcList.ForEach(x =>  
             {
                 x.GeneralInfo = (PcGeneralInfoM)db.PcGeneralInfoes.Find(x.id);
-                List<PcDrive> temp = db.PcDrives.Where(z => z.PcID == x.id).ToList();  //TODO Async
-                List<PcDriveM> trueTemp = new List<PcDriveM>();
-                temp.ForEach(z => trueTemp.Add((PcDriveM)z));
 
-                x.DriveList = trueTemp;
+                List<PcDriveM> trueDriveList = new List<PcDriveM>();
+                trueDriveList = driveList.Where(z => z.PcID == x.id).Select(z=>(PcDriveM)z).ToList();
+
+                x.DriveList = trueDriveList;
             });
 
             groupList.ForEach(x => 
@@ -47,6 +68,7 @@ namespace WebPart.Controllers
                 List<PcM> temp = pcList.Where(z => z.GroupID == x.id).ToList();
                 x.PcMs.AddRange(temp);
             });
+            */
 
             return groupList;
         }
@@ -57,7 +79,7 @@ namespace WebPart.Controllers
         [ResponseType(typeof(PcLoadInfoM))]
         public async Task<IHttpActionResult> GetPc(int id)
         {
-           
+
             PcLoadInfo pli = await db.PcLoadInfoes.FindAsync(id);
             if (pli == null)
             {
@@ -66,7 +88,7 @@ namespace WebPart.Controllers
 
             PcLoadInfoM ret = (PcLoadInfoM)pli;
 
-           
+
             return Ok(ret);
         }
 

@@ -22,18 +22,15 @@ namespace DesktopPart.ModelView
     public class OverSeerMV : NotifyModel
     {
         ObservableCollection<PcGroupe> pcGroupes;
-
         public ObservableCollection<PcGroupe> PcGroupes { get { return pcGroupes; } set {pcGroupes =value;RaiseEvent(nameof(pcGroupes)); } } // Очень странно это работает
 
         PC selectedPC;
-        public PC SelectedPC { get { return selectedPC; } set { selectedPC = value as PC; Data.Pc = value as PC; } }
-        public ChosenOne SelectedPCInfo { get; set; }
+        public PC SelectedPC { get { return selectedPC; } set { selectedPC = value as PC; Data.Pc = value as PC; RaiseEvent(nameof(SelectedPC)); } }
+        
+        private PcLoadInfo pcLoad;
+        public PcLoadInfo PcLoad { get { return pcLoad; } set { pcLoad = value; RaiseEvent(nameof(PcLoad)); } }
 
-        private PcInfo pcInfo;
-        public PcInfo PcInfo { get { return pcInfo; } set { pcInfo = value; RaiseEvent(nameof(PcInfo)); } }
 
-        private ProcessInfo pInfo;
-        public ProcessInfo PInfo { get { return pInfo; } set { pInfo = value; RaiseEvent(nameof(PInfo)); } }
 
         private BitmapImage jpeg;
         public BitmapImage JPEG { get { return jpeg; } set { jpeg = value; RaiseEvent(nameof(JPEG)); } }
@@ -58,7 +55,7 @@ namespace DesktopPart.ModelView
 
         public OverSeerMV()
         {
-            Init();
+            dbInit();
 
             OpenSMT = new CustomCUMmand<string>(
                 (s) =>
@@ -68,56 +65,20 @@ namespace DesktopPart.ModelView
                         case "Edit": Manager.AddWindowsOpen(new EditV()); PcGroupes = Data.PcGroupe; break;
                         case "Log": break;
                         case "Settings": break;
-                        case "About": break;
+                        case "About": UpdatePc(); break;
                     }
                 });
 
             GetInfo = new CustomCUMmand<string>(
                 (s) =>
                 {
-                    if (SelectedPC == null)
-                        return;
-
-                    //TODO Вообще бы тут еще сделать "Ping"
-
-                    string message = "GetFullInfo";
-                    string getMess = "";
-                    getMess = DoMessage(message);
-
-                    if (getMess != "")
-                    {
-                        SelectedPCInfo = JsonSerializer.Deserialize<ChosenOne>(getMess, new JsonSerializerOptions() { WriteIndented = true });
-                        PcInfo = SelectedPCInfo.PcInfo;
-                        PInfo = SelectedPCInfo.ProcessInfo;
-                        if (PInfo.ProcessList.Count != 0)
-                        {
-                            int temp = PInfo.ProcessList.Max(x => x.Cpu);
-                            Proc obj = PInfo.ProcessList.FirstOrDefault(a => a.Cpu == temp);
-
-                            CpuBoss = obj.Name + " ( " + obj.Cpu + "% )";
-
-                            ulong utemp = PInfo.ProcessList.Max(x => x.Ram);
-                            obj = PInfo.ProcessList.FirstOrDefault(a => a.Ram == utemp);
-
-                            RamBoss = obj.Name + " ( " + obj.Ram + "mb )";
-                        }
-
-
-                    }
-
-                    CpuChart[0].Values.Add(PInfo.CpuTotal);
-                    if (CpuChart[0].Values.Count > 20)
-                        CpuChart[0].Values.RemoveAt(0);
-
-
-                    JPEG = DoJpegMessage();
-
+                    
                 });
 
             UpdateJPEG = new CustomCUMmand<string>(
                 (s) =>
                 {
-                    JPEG = DoJpegMessage();
+                    //JPEG = DoJpegMessage();
                 },
                 () =>
                 {
@@ -144,140 +105,18 @@ namespace DesktopPart.ModelView
         }
 
 
-
-        private void Init()
+        private async void dbInit()
         {
-            using (FileStream fs = new FileStream("Pc.Groupe", FileMode.OpenOrCreate, FileAccess.Read))
-            using (StreamReader sr = new StreamReader(fs))
-            {
-                Data.PcGroupe = new ObservableCollection<PcGroupe>();
-                PcGroupes = Data.PcGroupe;
-                string json = sr.ReadToEnd();
-                if (string.IsNullOrEmpty(json))
-                    return;
-
-                Data.PcGroupe = JsonSerializer.Deserialize<ObservableCollection<PcGroupe>>(json);
-                PcGroupes = Data.PcGroupe;
-            }
-
-            CpuChart = new SeriesCollection
-            {
-                new LineSeries
-                {
-                    Title = "CPU%", Values = new ChartValues<int>()
-                }
-            };
-
+            
+            List<PcGroupe> temp = await HttpMessage.MethodGet<PcGroupe>("api/Pcs");
+            Data.PcGroupe = new ObservableCollection<PcGroupe>(temp);
+            PcGroupes = Data.PcGroupe;
+            
         }
 
-        /*
-        private void TestInit()
+        private async void UpdatePc() //TODO Добавить как-то в вечный цикл
         {
-            using (FileStream fs = new FileStream("PC.List", FileMode.OpenOrCreate, FileAccess.Read))
-            using (StreamReader sr = new StreamReader(fs))
-            {
-                Data.PCs = new ObservableCollection<PC>();
-                PCs = Data.PCs;
-                string json = sr.ReadToEnd();
-                if (string.IsNullOrEmpty(json))
-                    return;
-
-                Data.PCs = JsonSerializer.Deserialize<ObservableCollection<PC>>(json);
-                PCs = Data.PCs;
-            }
-
-        }
-        */
-
-        public string DoMessage(string message)
-        {
-            string retMess = "";
-            try
-            {
-                byte[] data = Encoding.UTF8.GetBytes(message);
-
-                TcpClient client = new TcpClient();
-                client.Connect(SelectedPC.IP, 1488);
-
-                NetworkStream ns = client.GetStream();
-                ns.Write(data, 0, data.Length);
-
-                data = new byte[256];
-                int bytes = 0;
-
-                StringBuilder sb = new StringBuilder();
-                do
-                {
-                    bytes = ns.Read(data, 0, data.Length);
-                    sb.Append(Encoding.UTF8.GetString(data, 0, bytes));
-
-                }
-                while (ns.DataAvailable);
-
-                ns.Close();
-                client.Close();
-
-                retMess = sb.ToString();
-            }
-            catch (Exception e)
-            {
-
-                MessageBox.Show("Lost connection\n" + e.Message);
-            }
-
-
-
-            return retMess;
-        }
-
-        private BitmapImage DoJpegMessage()
-        {
-            Bitmap jpeg = null;
-
-            try
-            {
-                byte[] data = Encoding.UTF8.GetBytes("GetJpeg");
-
-                byte[] leng = new byte[4];
-                int dataLeng = 0;
-
-
-                TcpClient client = new TcpClient();
-                client.Connect(SelectedPC.IP, 1488);
-
-                NetworkStream ns = client.GetStream();
-                ns.Write(data, 0, data.Length);
-
-                int bytesRead = ns.Read(leng, 0, 4); // TODO Убрать
-                dataLeng = BitConverter.ToInt32(leng, 0); // TODO Убрать
-
-                jpeg = new Bitmap(ns);
-
-
-                ns.Close();
-                client.Close();
-
-
-                BitmapImage returnal = new BitmapImage();
-
-                returnal = Translate(jpeg);
-                Data.Bmp = returnal;
-
-                return returnal;
-
-
-
-            }
-            catch (Exception e)
-            {
-
-                MessageBox.Show("Lost connection\n" + e.Message);
-                return null;
-
-            }
-
-
-
+            PcLoad = await HttpMessage.MethodGetBut<PcLoadInfo>("api/Pcs/" + SelectedPC.id);
         }
 
 
