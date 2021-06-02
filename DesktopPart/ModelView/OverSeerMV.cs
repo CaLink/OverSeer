@@ -45,6 +45,8 @@ namespace DesktopPart.ModelView
 
         public SeriesCollection CpuChart { get { return cpuChart; } set { cpuChart = value; } }
 
+        System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer();
+
 
 
 
@@ -55,6 +57,8 @@ namespace DesktopPart.ModelView
 
         public OverSeerMV()
         {
+            timer.Tick += Timer_Tick;
+            timer.Interval = 3000;
             dbInit();
 
             OpenSMT = new CustomCUMmand<string>(
@@ -63,16 +67,17 @@ namespace DesktopPart.ModelView
                     switch (s)
                     {
                         case "Edit": Manager.AddWindowsOpen(new EditV()); PcGroupes = Data.PcGroupe; break;
+                        case "UpdateDB":dbInit();break;
                         case "Log": break;
                         case "Settings": break;
-                        case "About": UpdatePc(); break;
+                        case "About": break;
                     }
                 });
 
             GetInfo = new CustomCUMmand<string>(
                 (s) =>
                 {
-                    
+                    //МертвыйМетод
                 });
 
             UpdateJPEG = new CustomCUMmand<string>(
@@ -104,6 +109,11 @@ namespace DesktopPart.ModelView
 
         }
 
+        private void Timer_Tick(object sender, EventArgs e)
+        {
+            if (SelectedPC != null)
+                UpdatePc();
+        }
 
         private async void dbInit()
         {
@@ -111,6 +121,7 @@ namespace DesktopPart.ModelView
             List<PcGroupe> temp = await HttpMessage.MethodGet<PcGroupe>("api/Pcs");
             Data.PcGroupe = new ObservableCollection<PcGroupe>(temp);
             PcGroupes = Data.PcGroupe;
+            timer.Start();
             
         }
 

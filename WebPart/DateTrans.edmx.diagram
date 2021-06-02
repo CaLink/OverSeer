@@ -4,13 +4,13 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="1e7b7627a3f341609dbde0f982f8e54b" Name="Diagram1" ZoomLevel="72">
-        <EntityTypeShape EntityType="BasedModel.Log" Width="1.5" PointX="0.875" PointY="6.125" IsExpanded="true" />
+      <Diagram DiagramId="2c68ad64e72040a78944d2ef34b7d5df" Name="Diagram1">
+        <EntityTypeShape EntityType="BasedModel.Log" Width="1.5" PointX="5.25" PointY="1.375" IsExpanded="true" />
         <EntityTypeShape EntityType="BasedModel.Pc" Width="1.5" PointX="3" PointY="5.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="BasedModel.PcDrive" Width="1.5" PointX="5.5" PointY="5.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="BasedModel.PcGeneralInfo" Width="1.5" PointX="4.375" PointY="9.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="BasedModel.PcGroup" Width="1.5" PointX="3.25" PointY="3.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="BasedModel.PcLoadInfo" Width="1.5" PointX="1.5" PointY="9.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="BasedModel.PcDrive" Width="1.5" PointX="5.25" PointY="4.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="BasedModel.PcGeneralInfo" Width="1.5" PointX="5.25" PointY="7.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="BasedModel.PcGroup" Width="1.5" PointX="0.75" PointY="6.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="BasedModel.PcLoadInfo" Width="1.5" PointX="5.25" PointY="11.125" IsExpanded="true" />
         <AssociationConnector Association="BasedModel.FK_Logs_Pc" ManuallyRouted="false" />
         <AssociationConnector Association="BasedModel.FK_Pc_PcGroup" ManuallyRouted="false" />
         <AssociationConnector Association="BasedModel.FK_PcDrive_Pc" ManuallyRouted="false" />

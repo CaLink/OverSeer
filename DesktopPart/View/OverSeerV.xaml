@@ -26,7 +26,11 @@
         </Grid.RowDefinitions>
 
         <Menu Grid.ColumnSpan="2">
-            <MenuItem Header="Edit" Command="{Binding OpenSMT}" CommandParameter="Edit"/>
+            <MenuItem Header="Edit">
+                <MenuItem Header="Edit Pc" Command="{Binding OpenSMT}" CommandParameter="Edit"/>
+                <MenuItem Header="Update DB" Command="{Binding OpenSMT}" CommandParameter="UpdateDB"/>
+            </MenuItem>
+
             <MenuItem Header="Log" Command="{Binding OpenSMT}" CommandParameter="Log"/>
             <MenuItem Header="Settings" Command="{Binding OpenSMT}" CommandParameter="Settings"/>
             <MenuItem Header="About" Command="{Binding OpenSMT}" CommandParameter="About"/>

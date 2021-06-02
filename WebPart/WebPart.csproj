@@ -163,6 +163,9 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\PcDrivesController.cs" />
+    <Compile Include="Controllers\PcGeneralInfoesController.cs" />
+    <Compile Include="Controllers\PcLoadInfoesController.cs" />
     <Compile Include="Controllers\PcsController.cs" />
     <Compile Include="DateTrans.Context.cs">
       <AutoGen>True</AutoGen>
@@ -187,10 +190,15 @@
     </Compile>
     <Compile Include="Models\LogsM.cs" />
     <Compile Include="Models\PcDriveM.cs" />
+    <Compile Include="Models\PcDriveMA.cs" />
     <Compile Include="Models\PcGeneralInfoM.cs" />
+    <Compile Include="Models\PcGeneralInfoMA.cs" />
     <Compile Include="Models\PcGroupM.cs" />
     <Compile Include="Models\PcLoadInfoM.cs" />
+    <Compile Include="Models\PcLoadInfoMA.cs" />
     <Compile Include="Models\PcM.cs" />
+    <Compile Include="Models\PcMA.cs" />
+    <Compile Include="Models\TempPc.cs" />
     <Compile Include="Pc.cs">
       <DependentUpon>DateTrans.tt</DependentUpon>
     </Compile>

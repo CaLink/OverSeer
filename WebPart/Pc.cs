@@ -22,6 +22,7 @@ namespace WebPart
         }
     
         public int id { get; set; }
+        public string GUID { get; set; }
         public string Name { get; set; }
         public string IP { get; set; }
         public int Port { get; set; }

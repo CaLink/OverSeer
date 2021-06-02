@@ -19,8 +19,8 @@ namespace NonServicePart
         
         private void Application_Startup(object sender, StartupEventArgs e)
         {
-            navi = new HeyListen();
             snus = new NowYouSeeMe();
+            navi = new HeyListen();
         }
     }
 }

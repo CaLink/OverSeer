@@ -20,6 +20,8 @@ namespace WebPart.Models
 
         public static implicit operator PcGeneralInfoM(PcGeneralInfo from)
         {
+            if (from == null)
+                return null;
             return new PcGeneralInfoM
             {
                 Cpu = from.Cpu,

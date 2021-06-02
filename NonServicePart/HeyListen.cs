@@ -22,13 +22,9 @@ namespace NonServicePart
         int logsID = 1;
         EventLog logs = new EventLog();
 
+        Pc pc = new Pc();
 
-        IPAddress ipAddress;
-        int port = 1488;
-        TcpListener hey;
-
-        JsonSerializerOptions jso = new JsonSerializerOptions() { WriteIndented = true };
-
+        System.Windows.Forms.Timer time = new System.Windows.Forms.Timer();
 
         ManagementObjectSearcher searcher1 = new ManagementObjectSearcher("root\\CIMV2", "SELECT Name,NumberOfCores,NumberOfLogicalProcessors,SocketDesignation,SystemName FROM Win32_Processor");
         ManagementObjectSearcher searcher2 = new ManagementObjectSearcher("root\\CIMV2", "SELECT OSArchitecture,Caption,TotalVisibleMemorySize FROM Win32_OperatingSystem");
@@ -38,7 +34,7 @@ namespace NonServicePart
         ManagementObjectSearcher searcher6 = new ManagementObjectSearcher("root\\CIMV2", "SELECT LoadPercentage FROM Win32_Processor");
 
 
-        public HeyListen(string ip = "127.0.0.1")
+        public HeyListen()
         {
             if (!EventLog.SourceExists("OverSeerServ"))
             {
@@ -49,18 +45,10 @@ namespace NonServicePart
 
             logs.WriteEntry($"{DateTime.Now}\nITS ALIVE", EventLogEntryType.Information, logsID++);
 
-            ipAddress = IPAddress.Parse(ip);
-            hey = new TcpListener(ipAddress, port);
+            time.Tick += Time_Tick;
+            time.Interval = 5000;
 
-            Thread listen = new Thread(new ThreadStart(Listen));
-            listen.Start();
-        }
-
-        public void Listen()
-        {
-            string mes;
-            byte[] send;
-
+            //Прогон одного запроса
             try
             {
                 searcher3.Get();
@@ -70,104 +58,223 @@ namespace NonServicePart
                 logs.WriteEntry($"{DateTime.Now}\n" + e.ToString(), EventLogEntryType.Error, logsID++);
             }
 
-
-            hey.Start();
             logs.WriteEntry($"{DateTime.Now}\nHey, Listen", EventLogEntryType.Information, logsID++);
 
-            //TODO Механизм выхода
-            while (true)
-            {
-                logs.WriteEntry($"{DateTime.Now}\nHey, Listen (Test)", EventLogEntryType.Information, logsID++);
+            dbInit();
 
-                TcpClient client = hey.AcceptTcpClient();
-                NetworkStream ns = client.GetStream();
+            time.Start();
 
-                logs.WriteEntry($"{DateTime.Now}\nSir, Yes, Sir", EventLogEntryType.Information, logsID++);
-
-                mes = GetMessage(ns);
-
-                send = PrepareMessage(mes);
-
-                logs.WriteEntry($"{DateTime.Now}\n" + send, EventLogEntryType.Information, logsID++);
-
-                ns.Write(send, 0, send.Length);
-
-                logs.WriteEntry($"{DateTime.Now}\nVAINT", EventLogEntryType.Information, logsID++);
-
-                ns.Close();
-                client.Close();
-
-                logs.WriteEntry($"{DateTime.Now}\nSessionEnd", EventLogEntryType.Information, logsID++);
-
-            }
         }
 
-
-        string GetMessage(NetworkStream ns)
+        private void Time_Tick(object sender, EventArgs e)
         {
-            string message = "";
-
-            byte[] data = new byte[256];
-            StringBuilder sb = new StringBuilder();
-            int bytes = 0;
-
-            do
-            {
-                bytes = ns.Read(data, 0, data.Length);
-                sb.Append(Encoding.UTF8.GetString(data, 0, bytes));
-            }
-            while (ns.DataAvailable);
-
-            message = sb.ToString();
-
-            logs.WriteEntry($"{DateTime.Now}\n{message}", EventLogEntryType.Information, logsID++);
-
-            return message;
+            Listen();
         }
 
-        byte[] PrepareMessage(string type)
+        private void dbInit()
         {
-            ChosenOne tempChosen = new ChosenOne();
-            ProcessInfo tempPI = new ProcessInfo();
-            string mes = "";
-            byte[] preparedMessage = new byte[0];
+            pc = InitPC().Result; // Тут нужно создавать комп? хз пока
+            SendGeneralInfo(); // Тут отправляем всю основную инфу о компе
 
-            switch (type)
+            SendDrive(); // Тут все винты
+            // Хз, возможно лучше объединить это все в один класс и отправлять его JSON'ом
+            // А не плодить сразу три запроса на сервак
+
+        }
+
+        private async Task<Pc> InitPC()
+        {
+
+            if (File.Exists("Secret.Data"))
+                using (FileStream fs = new FileStream("Secret.Data", FileMode.Open, FileAccess.Read))
+                using (StreamReader sr = new StreamReader(fs))
+                {
+                    pc.id = int.Parse(sr.ReadLine());
+                    pc.GUID = sr.ReadLine();
+                }
+            
+            Pc temp = HttpMessage.MethodPost("api/Pcs", pc).Result;
+
+            using (FileStream fs = new FileStream("Secret.Data", FileMode.Create, FileAccess.Write))
+            using (StreamWriter sw = new StreamWriter(fs))
             {
-                case "GetFullInfo":
-                    tempChosen.PcInfo = GetInfo();
-                    tempChosen.ProcessInfo = GetProcessInfo();
-
-                    mes = JsonSerializer.Serialize<ChosenOne>(tempChosen, jso);
-                    preparedMessage = Encoding.UTF8.GetBytes(mes);
-
-                    logs.WriteEntry($"{DateTime.Now}\n" + tempChosen.PcInfo.GetMessage() + "\n\n" + tempChosen.ProcessInfo.GetMessage(), EventLogEntryType.Information, logsID++);
-
-                    break;
-
-                case "GetProcess":
-                    tempPI = GetProcessInfo();
-
-                    mes = JsonSerializer.Serialize<ProcessInfo>(tempPI, jso);
-                    preparedMessage = Encoding.UTF8.GetBytes(mes);
-
-                    logs.WriteEntry($"{DateTime.Now}\n" + tempPI.GetMessage());
-
-                    break;
-
-                case "GetJpeg":
-                    preparedMessage = GetJpeg();
-                    logs.WriteEntry($"{DateTime.Now}\n" + preparedMessage.Length, EventLogEntryType.Information, logsID++);
-
-                    break;
-
-                //TODO Возможно, оно умрет здесь
-                default:
-                    break;
+                sw.WriteLine(temp.id);
+                sw.WriteLine(temp.GUID);
             }
 
-            return preparedMessage;
+            return temp;
+
         }
+
+        private void SendGeneralInfo()
+        {
+            PcGeneralInfo pgi = GetGeneralInfo();
+            HttpMessage.MethodPut("api/PcGeneralInfoes/" + pc.id, pgi);
+        }
+
+        private void SendDrive()
+        {
+            List<PcDrive> lpd = GetDrive();
+            HttpMessage.MethodPut("api/PcDrives/" + pc.id, lpd);
+        }
+
+        private void SendLoad()
+        {
+            PcLoadInfo pci = GetLoadInfo();
+            HttpMessage.MethodPut("api/PcLoadInfoes/" + pc.id, pci);
+        }
+
+
+
+
+
+        public void Listen()
+        {
+
+            SendLoad();
+                // Тут нунжо сделать постоянную заливку в БД
+                // Заливаем загрузку компа  (PcLoadInfo ) и, если необходимо, логи (Logs)
+
+
+        }
+
+
+        PcGeneralInfo GetGeneralInfo()
+        {
+            PcGeneralInfo ret = new PcGeneralInfo();
+
+            try
+            {
+                foreach (ManagementObject queryObj in searcher1.Get())
+                {
+                    ret.Cpu = queryObj["Name"].ToString();
+                    ret.Cores = int.Parse(queryObj["NumberOfCores"].ToString());
+                    ret.LogicalProcessors = int.Parse(queryObj["NumberOfLogicalProcessors"].ToString());
+                    ret.Socket = queryObj["SocketDesignation"].ToString();
+                    ret.SystemName = queryObj["SystemName"].ToString();
+                }
+            }
+            catch (Exception e)
+            {
+                //logs.WriteEntry($"{DateTime.Now}\n" + e.ToString(), EventLogEntryType.Error, logsID++);
+                //Logs();
+            }
+
+            try
+            {
+                foreach (ManagementObject queryObj in searcher2.Get())
+                {
+                    ret.OsArchitecture = queryObj["OSArchitecture"].ToString();
+                    ret.OsVersion = queryObj["Caption"].ToString();
+                    ret.Ram = ulong.Parse(queryObj["TotalVisibleMemorySize"].ToString());
+
+                }
+            }
+            catch (Exception e)
+            {
+                //logs.WriteEntry($"{DateTime.Now}\n" + e.ToString(), EventLogEntryType.Error, logsID++);
+                //Logs();
+            }
+
+            return ret;
+        }
+
+        List<PcDrive> GetDrive()
+        {
+            List<PcDrive> ret = new List<PcDrive>();
+
+            try
+            {
+
+                DriveInfo[] allDrives = DriveInfo.GetDrives();
+
+                foreach (DriveInfo d in allDrives)
+                {
+                    PcDrive disk = new PcDrive();
+
+                    disk.Drive = d.Name;
+                    disk.DriveType = d.DriveType.ToString();
+                    if (d.IsReady == true)
+                    {
+                        disk.FileSystem = d.DriveFormat;
+                        disk.AvailabeSpace = d.TotalFreeSpace;
+                        disk.TotalSize = d.TotalSize;
+                    }
+                    ret.Add(disk);
+                }
+
+            }
+            catch (Exception e)
+            {
+
+                //logs.WriteEntry($"{DateTime.Now}\n" + e.ToString(), EventLogEntryType.Error, logsID++);
+                //Logs();
+            }
+
+            return ret;
+
+        }
+
+        PcLoadInfo GetLoadInfo()
+        {
+            PcLoadInfo ret = new PcLoadInfo();
+
+            //CpuByCores
+            try
+            {
+                foreach (ManagementObject queryObj in searcher4.Get())
+                {
+                    ret.CpuLoadByCore.Add(int.Parse(queryObj["PercentProcessorTime"].ToString()));
+                }
+            }
+            catch (ManagementException e)
+            {
+                //logs.WriteEntry($"{DateTime.Now}\nAn error occurred while querying for WMI data: " + e.Message, EventLogEntryType.Error, logsID++);
+                //Logs();
+
+            }
+
+            // CPU%
+            try
+            {
+                foreach (ManagementObject item in searcher6.Get())
+                {
+                    int percentCpu = int.Parse(item["LoadPercentage"].ToString());
+                    ret.CpuLoad = percentCpu;
+                }
+
+            }
+            catch (Exception e)
+            {
+                //logs.WriteEntry($"{DateTime.Now}\nAn error occurred while querying for WMI data: " + e.Message, EventLogEntryType.Error, logsID++);
+                //Logs();
+
+            }
+
+            // %RAM%
+            try
+            {
+                foreach (ManagementObject item in searcher5.Get())
+                {
+                    long free = long.Parse(item["FreePhysicalMemory"].ToString());
+                    long total = long.Parse(item["TotalVisibleMemorySize"].ToString());
+                    decimal temp = ((decimal)total - (decimal)free) / (decimal)total;
+                    ret.RamLoad = (int)(Math.Round(temp, 2) * 100);
+                }
+
+            }
+            catch (ManagementException e)
+            {
+                logs.WriteEntry($"{DateTime.Now}\nAn error occurred while querying for WMI data: " + e.Message, EventLogEntryType.Error, logsID++);
+                //Logs();
+
+            }
+
+            return ret;
+        }
+
+
+
 
         PcInfo GetInfo()
         {
@@ -194,7 +301,7 @@ namespace NonServicePart
             // PcInfo
             try
             {
-                
+
 
                 foreach (ManagementObject queryObj in searcher2.Get())
                 {
@@ -252,7 +359,7 @@ namespace NonServicePart
             // ProcessInfo
             try
             {
-                
+
 
                 Proc newProc = new Proc();
 
@@ -296,7 +403,7 @@ namespace NonServicePart
             // %RAM%
             try
             {
-                
+
 
                 foreach (ManagementObject item in searcher5.Get())
                 {
@@ -355,8 +462,6 @@ namespace NonServicePart
                 bmp.Save(ms, ImageFormat.Png);
                 mes = ms.ToArray();
             }
-
-            bmp.Save("ass.png", ImageFormat.Png);
 
             length = BitConverter.GetBytes(mes.Length);
             ret = new byte[4 + mes.Length];

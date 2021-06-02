@@ -42,6 +42,7 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Management" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Text.Json, Version=4.0.1.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
@@ -71,7 +72,12 @@
     <Compile Include="Model\ChosenOne.cs" />
     <Compile Include="Model\Disk.cs" />
     <Compile Include="HeyListen.cs" />
+    <Compile Include="Model\HttpMessage.cs" />
+    <Compile Include="Model\Pc.cs" />
+    <Compile Include="Model\PcDrive.cs" />
+    <Compile Include="Model\PcGeneralInfo.cs" />
     <Compile Include="Model\PcInfo.cs" />
+    <Compile Include="Model\PcLoadInfo.cs" />
     <Compile Include="Model\Proc.cs" />
     <Compile Include="Model\ProcessInfo.cs" />
     <Compile Include="NowYouSeeMe.cs" />

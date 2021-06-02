@@ -17,6 +17,7 @@ namespace WebPart.Controllers
     public class PcsController : ApiController
     {
         private BasedEntities db = new BasedEntities();
+        private Random rnd = new Random();
 
         //TODO А почему он не 
         // А тут список груп, компов и их статической инфы
@@ -36,18 +37,18 @@ namespace WebPart.Controllers
             groupList.ForEach(x =>
             {
                 x.PcMs = new List<PcM>();
-                
+
                 tempPcList.Where(z => z.PcGroupID == x.id).ToList().ForEach(z =>
                 {
                     PcM PMs = (PcM)z;
                     PMs.DriveList = new List<PcDriveM>();
-                    driveList.Where(c => c.PcID == z.id).ToList().ForEach(c=> PMs.DriveList.Add((PcDriveM)c));
+                    driveList.Where(c => c.PcID == z.id).ToList().ForEach(c => PMs.DriveList.Add((PcDriveM)c));
                     PMs.GeneralInfo = db.PcGeneralInfoes.Find(z.id);
 
                     x.PcMs.Add(PMs);
-                     
-                    });
-                
+
+                });
+
             });
 
 
@@ -128,34 +129,77 @@ namespace WebPart.Controllers
         }
 
         // POST: api/Pcs
-        [ResponseType(typeof(Pc))]
-        public async Task<IHttpActionResult> PostPc(Pc pc)
+        [ResponseType(typeof(PcMA))]
+        public async Task<IHttpActionResult> PostPc(PcMA pc)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            db.Pcs.Add(pc);
+            //TODO Это бы как-то проверить
+            if (pc != null)
+            {
+                var temp = db.Pcs.Where(x => x.GUID == pc.GUID).ToList();
+                if (temp.Count == 1)
+                    return Ok(new PcMA
+                    {
+                        id = temp[0].id,
+                        GUID = temp[0].GUID
+                    }) ;
 
+            }
+
+            Pc sas = new Pc();
+
+            sas.IP = "Woops";
+            sas.Name = "Woops";
+            sas.Port = -1;
+            sas.PcGroupID = 1;
+            //sas.GUID = Guid.NewGuid().ToString();
+
+            do
+            {
+                sas.GUID = Guid.NewGuid().ToString();
+            }
+            while (db.Pcs.Where(x => x.GUID == sas.GUID).ToList().Count > 0);
+
+           
+            db.Pcs.Add(sas);
             try
             {
                 await db.SaveChangesAsync();
+                PcMA pici = new PcMA();
+                pici.id = db.Pcs.Where(x=>x.GUID == sas.GUID).ToList()[0].id;
+                pici.GUID = sas.GUID;
+                return Ok(pici);
             }
-            catch (DbUpdateException)
+            catch (Exception e)
             {
-                if (PcExists(pc.id))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+                Console.WriteLine(e);
 
-            return CreatedAtRoute("DefaultApi", new { id = pc.id }, pc);
+                return Ok(new PcMA());
+            }
+            /*
+           try
+           {
+               await db.SaveChangesAsync();
+           }
+           catch (DbUpdateException)
+           {
+               if (PcExists(pc.id))
+               {
+                   return Conflict();
+               }
+               else
+               {
+                   throw;
+               }
+           }
+           */
+            //return CreatedAtRoute("DefaultApi", new { id = pc.id }, pc);
         }
+
 
         // DELETE: api/Pcs/5
         [ResponseType(typeof(Pc))]
