@@ -55,10 +55,8 @@ namespace NonServicePart
             }
             catch (Exception e)
             {
-                logs.WriteEntry($"{DateTime.Now}\n" + e.ToString(), EventLogEntryType.Error, logsID++);
+                SendLogs(e.ToString());
             }
-
-            logs.WriteEntry($"{DateTime.Now}\nHey, Listen", EventLogEntryType.Information, logsID++);
 
             dbInit();
 
@@ -92,7 +90,7 @@ namespace NonServicePart
                     pc.id = int.Parse(sr.ReadLine());
                     pc.GUID = sr.ReadLine();
                 }
-            
+
             Pc temp = HttpMessage.MethodPost("api/Pcs", pc).Result;
 
             using (FileStream fs = new FileStream("Secret.Data", FileMode.Create, FileAccess.Write))
@@ -124,18 +122,19 @@ namespace NonServicePart
             HttpMessage.MethodPut("api/PcLoadInfoes/" + pc.id, pci);
         }
 
+        private void SendLogs(string ex)
+        {
+            HttpMessage.MethodPut("api/" + pc.id, ex);
+            logs.WriteEntry($"{DateTime.Now}\n" + ex, EventLogEntryType.Error, logsID++);
+
+        }
 
 
 
 
         public void Listen()
         {
-
             SendLoad();
-                // Тут нунжо сделать постоянную заливку в БД
-                // Заливаем загрузку компа  (PcLoadInfo ) и, если необходимо, логи (Logs)
-
-
         }
 
 
@@ -156,8 +155,7 @@ namespace NonServicePart
             }
             catch (Exception e)
             {
-                //logs.WriteEntry($"{DateTime.Now}\n" + e.ToString(), EventLogEntryType.Error, logsID++);
-                //Logs();
+                SendLogs(e.ToString());
             }
 
             try
@@ -172,8 +170,7 @@ namespace NonServicePart
             }
             catch (Exception e)
             {
-                //logs.WriteEntry($"{DateTime.Now}\n" + e.ToString(), EventLogEntryType.Error, logsID++);
-                //Logs();
+                SendLogs(e.ToString());
             }
 
             return ret;
@@ -206,9 +203,7 @@ namespace NonServicePart
             }
             catch (Exception e)
             {
-
-                //logs.WriteEntry($"{DateTime.Now}\n" + e.ToString(), EventLogEntryType.Error, logsID++);
-                //Logs();
+                SendLogs(e.ToString());
             }
 
             return ret;
@@ -229,9 +224,7 @@ namespace NonServicePart
             }
             catch (ManagementException e)
             {
-                //logs.WriteEntry($"{DateTime.Now}\nAn error occurred while querying for WMI data: " + e.Message, EventLogEntryType.Error, logsID++);
-                //Logs();
-
+                SendLogs(e.ToString());
             }
 
             // CPU%
@@ -246,9 +239,7 @@ namespace NonServicePart
             }
             catch (Exception e)
             {
-                //logs.WriteEntry($"{DateTime.Now}\nAn error occurred while querying for WMI data: " + e.Message, EventLogEntryType.Error, logsID++);
-                //Logs();
-
+                SendLogs(e.ToString());
             }
 
             // %RAM%
@@ -265,188 +256,11 @@ namespace NonServicePart
             }
             catch (ManagementException e)
             {
-                logs.WriteEntry($"{DateTime.Now}\nAn error occurred while querying for WMI data: " + e.Message, EventLogEntryType.Error, logsID++);
-                //Logs();
-
+                SendLogs(e.ToString());
             }
 
             return ret;
         }
-
-
-
-
-        PcInfo GetInfo()
-        {
-            PcInfo pcInfo = new PcInfo();
-
-            // PcInfo
-            try
-            {
-                foreach (ManagementObject queryObj in searcher1.Get())
-                {
-                    pcInfo.CpuName = queryObj["Name"].ToString();
-                    pcInfo.Cores = int.Parse(queryObj["NumberOfCores"].ToString());
-                    pcInfo.LogicalProcessors = int.Parse(queryObj["NumberOfLogicalProcessors"].ToString());
-                    pcInfo.SocketName = queryObj["SocketDesignation"].ToString();
-                    pcInfo.SystemName = queryObj["SystemName"].ToString();
-
-                }
-            }
-            catch (Exception e)
-            {
-
-                logs.WriteEntry($"{DateTime.Now}\n" + e.ToString(), EventLogEntryType.Error, logsID++);
-            }
-            // PcInfo
-            try
-            {
-
-
-                foreach (ManagementObject queryObj in searcher2.Get())
-                {
-                    pcInfo.OSArchitecture = queryObj["OSArchitecture"].ToString();
-                    pcInfo.OSVersion = queryObj["Caption"].ToString();
-                    pcInfo.Ram = ulong.Parse(queryObj["TotalVisibleMemorySize"].ToString());
-
-                }
-            }
-            catch (Exception e)
-            {
-
-                logs.WriteEntry($"{DateTime.Now}\n" + e.ToString(), EventLogEntryType.Error, logsID++);
-            }
-            // DiskInfo
-            try
-            {
-
-                DriveInfo[] allDrives = DriveInfo.GetDrives();
-
-                foreach (DriveInfo d in allDrives)
-                {
-                    Disk disk = new Disk();
-
-                    disk.Drive = d.Name;
-                    disk.DriveType = d.DriveType.ToString();
-                    if (d.IsReady == true)
-                    {
-                        disk.FileSystem = d.DriveFormat;
-                        disk.AvailabeSpace = d.TotalFreeSpace;
-                        disk.TotalSize = d.TotalSize;
-                    }
-                    pcInfo.Drives.Add(disk);
-                }
-
-
-            }
-            catch (Exception e)
-            {
-
-                logs.WriteEntry($"{DateTime.Now}\n" + e.ToString(), EventLogEntryType.Error, logsID++);
-            }
-
-            logs.WriteEntry($"{DateTime.Now}\n" + pcInfo.GetMessage(), EventLogEntryType.Information, logsID++);
-
-            return pcInfo;
-        }
-        ProcessInfo GetProcessInfo()
-        {
-            ProcessInfo pInfo = new ProcessInfo();
-
-            pInfo.ProcessList = new List<Proc>();
-            pInfo.CpuLoadByCore = new List<int>();
-
-            // ProcessInfo
-            try
-            {
-
-
-                Proc newProc = new Proc();
-
-                foreach (ManagementObject queryObj in searcher3.Get())
-                {
-
-                    newProc.ID = int.Parse(queryObj["IDProcess"].ToString());
-                    newProc.Name = queryObj["Name"].ToString();
-                    newProc.Cpu = int.Parse(queryObj["PercentProcessorTime"].ToString());
-                    newProc.Ram = ulong.Parse(queryObj["WorkingSetPrivate"].ToString()); //Or WorkingSet
-
-                    if (newProc.Name == "Idle" || newProc.Name == "_Total")
-                        continue;
-
-                    pInfo.ProcessList.Add(newProc);
-                }
-
-
-            }
-            catch (ManagementException e)
-            {
-                logs.WriteEntry($"{DateTime.Now}\nAn error occurred while querying for WMI data: " + e.Message, EventLogEntryType.Error, logsID++);
-            }
-
-            // COREs%
-            try
-            {
-
-
-                foreach (ManagementObject queryObj in searcher4.Get())
-                {
-                    pInfo.CpuLoadByCore.Add(int.Parse(queryObj["PercentProcessorTime"].ToString()));
-                }
-            }
-            catch (ManagementException e)
-            {
-                logs.WriteEntry($"{DateTime.Now}\nAn error occurred while querying for WMI data: " + e.Message, EventLogEntryType.Error, logsID++);
-
-            }
-
-            // %RAM%
-            try
-            {
-
-
-                foreach (ManagementObject item in searcher5.Get())
-                {
-                    long free = long.Parse(item["FreePhysicalMemory"].ToString());
-                    long total = long.Parse(item["TotalVisibleMemorySize"].ToString());
-                    decimal temp = ((decimal)total - (decimal)free) / (decimal)total;
-                    pInfo.TotalRamLoad = (int)(Math.Round(temp, 2) * 100);
-                }
-
-
-            }
-            catch (ManagementException e)
-            {
-
-                logs.WriteEntry($"{DateTime.Now}\nAn error occurred while querying for WMI data: " + e.Message, EventLogEntryType.Error, logsID++);
-
-            }
-
-            // CPU%
-            try
-            {
-
-
-
-                foreach (ManagementObject item in searcher6.Get())
-                {
-                    int percentCpu = int.Parse(item["LoadPercentage"].ToString());
-                    pInfo.CpuTotal = percentCpu;
-                }
-
-            }
-            catch (Exception e)
-            {
-
-                logs.WriteEntry($"{DateTime.Now}\nAn error occurred while querying for WMI data: " + e.Message, EventLogEntryType.Error, logsID++);
-
-            }
-
-            logs.WriteEntry($"{DateTime.Now}\n" + pInfo.GetMessage(), EventLogEntryType.Information, logsID++);
-
-            return pInfo;
-        }
-
 
         byte[] GetJpeg()
         {

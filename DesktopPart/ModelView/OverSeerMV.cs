@@ -48,9 +48,7 @@ namespace DesktopPart.ModelView
         System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer();
 
 
-
-
-        public CustomCUMmand<string> OpenSMT { get; set; }
+        public CustomCUMmand<string> MenuButton { get; set; }
         public CustomCUMmand<string> GetInfo { get; set; }
         public CustomCUMmand<string> UpdateJPEG { get; set; }
         public CustomCUMmand<string> ShowPick { get; set; }
@@ -61,7 +59,7 @@ namespace DesktopPart.ModelView
             timer.Interval = 3000;
             dbInit();
 
-            OpenSMT = new CustomCUMmand<string>(
+            MenuButton = new CustomCUMmand<string>(
                 (s) =>
                 {
                     switch (s)

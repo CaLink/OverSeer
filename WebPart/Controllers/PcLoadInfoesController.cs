@@ -21,13 +21,18 @@ namespace WebPart.Controllers
         // GET: api/PcLoadInfoes
         public IQueryable<PcLoadInfo> GetPcLoadInfoes()
         {
+            /*
             return db.PcLoadInfoes;
+            */
+            return null;
+
         }
 
         // GET: api/PcLoadInfoes/5
         [ResponseType(typeof(PcLoadInfo))]
         public async Task<IHttpActionResult> GetPcLoadInfo(int id)
         {
+            /*
             PcLoadInfo pcLoadInfo = await db.PcLoadInfoes.FindAsync(id);
             if (pcLoadInfo == null)
             {
@@ -35,6 +40,8 @@ namespace WebPart.Controllers
             }
 
             return Ok(pcLoadInfo);
+            */
+            return BadRequest();
         }
 
         // PUT: api/PcLoadInfoes/5
@@ -90,10 +97,6 @@ namespace WebPart.Controllers
 
             }
 
-
-
-
-
             try
             {
                 await db.SaveChangesAsync();
@@ -112,6 +115,7 @@ namespace WebPart.Controllers
         [ResponseType(typeof(PcLoadInfo))]
         public async Task<IHttpActionResult> PostPcLoadInfo(PcLoadInfo pcLoadInfo)
         {
+            /*
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -136,12 +140,15 @@ namespace WebPart.Controllers
             }
 
             return CreatedAtRoute("DefaultApi", new { id = pcLoadInfo.PcID }, pcLoadInfo);
+            */
+            return BadRequest();
         }
 
         // DELETE: api/PcLoadInfoes/5
         [ResponseType(typeof(PcLoadInfo))]
         public async Task<IHttpActionResult> DeletePcLoadInfo(int id)
         {
+            /*
             PcLoadInfo pcLoadInfo = await db.PcLoadInfoes.FindAsync(id);
             if (pcLoadInfo == null)
             {
@@ -152,6 +159,8 @@ namespace WebPart.Controllers
             await db.SaveChangesAsync();
 
             return Ok(pcLoadInfo);
+            */
+            return BadRequest();
         }
 
         protected override void Dispose(bool disposing)

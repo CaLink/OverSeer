@@ -27,13 +27,13 @@
 
         <Menu Grid.ColumnSpan="2">
             <MenuItem Header="Edit">
-                <MenuItem Header="Edit Pc" Command="{Binding OpenSMT}" CommandParameter="Edit"/>
-                <MenuItem Header="Update DB" Command="{Binding OpenSMT}" CommandParameter="UpdateDB"/>
+                <MenuItem Header="Edit Pc" Command="{Binding MenuButton}" CommandParameter="Edit"/>
+                <MenuItem Header="Update DB" Command="{Binding MenuButton}" CommandParameter="UpdateDB"/>
             </MenuItem>
 
-            <MenuItem Header="Log" Command="{Binding OpenSMT}" CommandParameter="Log"/>
-            <MenuItem Header="Settings" Command="{Binding OpenSMT}" CommandParameter="Settings"/>
-            <MenuItem Header="About" Command="{Binding OpenSMT}" CommandParameter="About"/>
+            <MenuItem Header="Log" Command="{Binding MenuButton}" CommandParameter="Log"/>
+            <MenuItem Header="Settings" Command="{Binding MenuButton}" CommandParameter="Settings"/>
+            <MenuItem Header="About" Command="{Binding MenuButton}" CommandParameter="About"/>
         </Menu>
 
         <GroupBox Grid.Row="1" Margin="10">

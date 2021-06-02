@@ -205,6 +205,7 @@ namespace WebPart.Controllers
         [ResponseType(typeof(Pc))]
         public async Task<IHttpActionResult> DeletePc(int id)
         {
+            /*
             Pc pc = await db.Pcs.FindAsync(id);
             if (pc == null)
             {
@@ -215,6 +216,8 @@ namespace WebPart.Controllers
             await db.SaveChangesAsync();
 
             return Ok(pc);
+            */
+            return BadRequest();
         }
 
         protected override void Dispose(bool disposing)

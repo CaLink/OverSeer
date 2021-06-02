@@ -21,13 +21,15 @@ namespace WebPart.Controllers
         // GET: api/PcGeneralInfoes
         public IQueryable<PcGeneralInfo> GetPcGeneralInfoes()
         {
-            return db.PcGeneralInfoes;
+            //   return db.PcGeneralInfoes;
+            return null;
         }
 
         // GET: api/PcGeneralInfoes/5
         [ResponseType(typeof(PcGeneralInfo))]
         public async Task<IHttpActionResult> GetPcGeneralInfo(int id)
         {
+            /*
             PcGeneralInfo pcGeneralInfo = await db.PcGeneralInfoes.FindAsync(id);
             if (pcGeneralInfo == null)
             {
@@ -35,6 +37,8 @@ namespace WebPart.Controllers
             }
 
             return Ok(pcGeneralInfo);
+            */
+            return BadRequest();
         }
 
         // PUT: api/PcGeneralInfoes/5
@@ -122,6 +126,7 @@ namespace WebPart.Controllers
         [ResponseType(typeof(PcGeneralInfo))]
         public async Task<IHttpActionResult> PostPcGeneralInfo(PcGeneralInfo pcGeneralInfo)
         {
+            /*
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -146,12 +151,15 @@ namespace WebPart.Controllers
             }
 
             return CreatedAtRoute("DefaultApi", new { id = pcGeneralInfo.PcID }, pcGeneralInfo);
+            */
+            return BadRequest();
         }
 
         // DELETE: api/PcGeneralInfoes/5
         [ResponseType(typeof(PcGeneralInfo))]
         public async Task<IHttpActionResult> DeletePcGeneralInfo(int id)
         {
+            /*
             PcGeneralInfo pcGeneralInfo = await db.PcGeneralInfoes.FindAsync(id);
             if (pcGeneralInfo == null)
             {
@@ -162,6 +170,8 @@ namespace WebPart.Controllers
             await db.SaveChangesAsync();
 
             return Ok(pcGeneralInfo);
+            */
+            return BadRequest();
         }
 
         protected override void Dispose(bool disposing)

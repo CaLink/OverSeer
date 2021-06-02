@@ -15,7 +15,7 @@ namespace WebPart
     public partial class Log
     {
         public int id { get; set; }
-        public byte[] Date { get; set; }
+        public System.DateTime Date { get; set; }
         public int PcID { get; set; }
         public string Message { get; set; }
     

@@ -21,13 +21,15 @@ namespace WebPart.Controllers
         // GET: api/PcDrives
         public IQueryable<PcDrive> GetPcDrives()
         {
-            return db.PcDrives;
+            //return db.PcDrives;
+            return null;
         }
 
         // GET: api/PcDrives/5
         [ResponseType(typeof(PcDrive))]
         public async Task<IHttpActionResult> GetPcDrive(int id)
         {
+            /*
             PcDrive pcDrive = await db.PcDrives.FindAsync(id);
             if (pcDrive == null)
             {
@@ -35,6 +37,8 @@ namespace WebPart.Controllers
             }
 
             return Ok(pcDrive);
+            */
+            return BadRequest();
         }
 
         // PUT: api/PcDrives/5
@@ -54,7 +58,7 @@ namespace WebPart.Controllers
 
             List<PcDrive> curetnPcDrive = db.PcDrives.Where(x => x.PcID == id).ToList();
 
-            if(curetnPcDrive.Count == 0)
+            if (curetnPcDrive.Count == 0)
             {
                 foreach (var item in pcDrive)
                 {
@@ -69,7 +73,7 @@ namespace WebPart.Controllers
                     db.PcDrives.Add(newDrive);
                 }
             }
-            else if(curetnPcDrive.Count == pcDrive.Count)
+            else if (curetnPcDrive.Count == pcDrive.Count)
             {
                 for (int i = 0; i < curetnPcDrive.Count; i++)
                 {
@@ -107,7 +111,7 @@ namespace WebPart.Controllers
                     db.PcDrives.Add(newDrive);
                 }
             }
-            else if(curetnPcDrive.Count > pcDrive.Count)
+            else if (curetnPcDrive.Count > pcDrive.Count)
             {
                 int i = 0;
                 for (; i < pcDrive.Count; i++)
@@ -143,6 +147,7 @@ namespace WebPart.Controllers
         [ResponseType(typeof(PcDrive))]
         public async Task<IHttpActionResult> PostPcDrive(PcDrive pcDrive)
         {
+            /*
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
@@ -152,12 +157,15 @@ namespace WebPart.Controllers
             await db.SaveChangesAsync();
 
             return CreatedAtRoute("DefaultApi", new { id = pcDrive.id }, pcDrive);
+            */
+            return BadRequest();
         }
 
         // DELETE: api/PcDrives/5
         [ResponseType(typeof(PcDrive))]
         public async Task<IHttpActionResult> DeletePcDrive(int id)
         {
+            /*
             PcDrive pcDrive = await db.PcDrives.FindAsync(id);
             if (pcDrive == null)
             {
@@ -168,6 +176,8 @@ namespace WebPart.Controllers
             await db.SaveChangesAsync();
 
             return Ok(pcDrive);
+            */
+            return BadRequest();
         }
 
         protected override void Dispose(bool disposing)

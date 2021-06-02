@@ -87,6 +87,7 @@
     <Compile Include="CUstoM\CUstoMTreeView.cs" />
     <Compile Include="ModelView\AddPCMV.cs" />
     <Compile Include="ModelView\EditMV.cs" />
+    <Compile Include="ModelView\LogsMV.cs" />
     <Compile Include="ModelView\PickShowerMV.cs" />
     <Compile Include="Model\Data.cs" />
     <Compile Include="Model\HttpMessage.cs" />
@@ -100,6 +101,9 @@
     </Compile>
     <Compile Include="View\EditV.xaml.cs">
       <DependentUpon>EditV.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\LogsV.xaml.cs">
+      <DependentUpon>LogsV.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\OverSeerV.xaml.cs">
       <DependentUpon>OverSeerV.xaml</DependentUpon>
@@ -126,6 +130,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\EditV.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\LogsV.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
