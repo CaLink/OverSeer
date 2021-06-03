@@ -19,10 +19,10 @@ namespace WebPart.Controllers
         private BasedEntities db = new BasedEntities();
 
         // GET: api/Logs
-        public List<LogsM> GetLogs()
+        public List<TempLogs> GetLogs()
         {
-            List<LogsM> ret = new List<LogsM>();
-            db.Logs.ToList().ForEach(x => ret.Add((LogsM)x));
+            List<TempLogs> ret = new List<TempLogs>();
+            db.Logs.ToList().ForEach(x => ret.Add((TempLogs)x));
 
             return ret;
         }

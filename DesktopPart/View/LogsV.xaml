@@ -10,8 +10,8 @@
     <Window.Resources>
         <ViewModel:LogsMV x:Key="View"/>
     </Window.Resources>
-    
-    <Grid>
+
+    <Grid DataContext="{StaticResource View}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto" MinWidth="100"/>
             <ColumnDefinition Width="*"/>
@@ -23,22 +23,26 @@
             <RowDefinition Height="auto" MinHeight="25"/>
         </Grid.RowDefinitions>
 
-        <ComboBox  Grid.Column="0" Grid.Row="0"/>
-        <TextBox Grid.Column="1" Grid.Row="0" Margin="0,1,0,139" Grid.RowSpan="2"/>
-        <Button Grid.Column="2" Grid.Row="0" Content="Select"/>
+        <ComboBox  Grid.Column="0" Grid.Row="0" ItemsSource="{Binding Pcs}" SelectedItem="{Binding SelectedPC}" DisplayMemberPath="Name"/>
+        <TextBox Grid.Column="1" Grid.Row="0" Margin="0,1,0,139" Grid.RowSpan="2" Text="{Binding Contain}"/>
+        <StackPanel Grid.Column="2" Grid.Row="0">
+            <Button  Content="Select" Command="{Binding Find}"/>
+            <Button Content="Drop" Command="{Binding Drop}"/>
+        </StackPanel>
 
-        <ListView Grid.ColumnSpan="3" Grid.Row="1" ItemsSource="{Binding}">
+        <ListView Grid.ColumnSpan="3" Grid.Row="1" ItemsSource="{Binding SelectedLogs}">
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="Pc Name" DisplayMemberBinding="{Binding}" Width="auto"/>
-                    <GridViewColumn Header="Date" DisplayMemberBinding="{Binding}"/>
-                    <GridViewColumn Header="Message" DisplayMemberBinding="{Binding}" Width="auto"/>
+                    <GridViewColumn Header="Pc Name" DisplayMemberBinding="{Binding ID}" Width="auto"/>
+                    <GridViewColumn Header="Date" DisplayMemberBinding="{Binding Date}"/>
+                    <GridViewColumn Header="Message" DisplayMemberBinding="{Binding Message}" Width="auto"/>
                 </GridView>
             </ListView.View>
         </ListView>
 
-        <Button Grid.Column="2" Grid.Row="2" Content="Close"/>
-        <Button Grid.Column="0" Grid.Row="2" Content="Refresh"/>
+        <Button Grid.Column="2" Grid.Row="2" Content="Close" Command="{Binding Close}"/>
+        <Button   Grid.Column="0" Grid.Row="2" Content="Refresh" Command="{Binding Refresh}"/>
+
 
     </Grid>
 </Window>

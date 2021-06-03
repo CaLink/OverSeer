@@ -66,7 +66,7 @@ namespace DesktopPart.ModelView
                     {
                         case "Edit": Manager.AddWindowsOpen(new EditV()); PcGroupes = Data.PcGroupe; break;
                         case "UpdateDB":dbInit();break;
-                        case "Log": break;
+                        case "Log": Manager.AddWindowsOpen(new LogsV()); break;
                         case "Settings": break;
                         case "About": break;
                     }

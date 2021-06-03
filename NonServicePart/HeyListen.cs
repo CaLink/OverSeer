@@ -124,7 +124,7 @@ namespace NonServicePart
 
         private void SendLogs(string ex)
         {
-            HttpMessage.MethodPut("api/" + pc.id, ex);
+            HttpMessage.MethodPut("api/Logs" + pc.id, ex);
             logs.WriteEntry($"{DateTime.Now}\n" + ex, EventLogEntryType.Error, logsID++);
 
         }

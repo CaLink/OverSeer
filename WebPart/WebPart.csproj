@@ -199,6 +199,7 @@
     <Compile Include="Models\PcLoadInfoMA.cs" />
     <Compile Include="Models\PcM.cs" />
     <Compile Include="Models\PcMA.cs" />
+    <Compile Include="Models\TempLogs.cs" />
     <Compile Include="Models\TempPc.cs" />
     <Compile Include="Pc.cs">
       <DependentUpon>DateTrans.tt</DependentUpon>

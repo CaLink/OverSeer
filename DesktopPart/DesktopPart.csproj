@@ -96,6 +96,7 @@
     <Compile Include="Model\PcDrive.cs" />
     <Compile Include="Model\PcGeneralInfo.cs" />
     <Compile Include="Model\PcLoadInfo.cs" />
+    <Compile Include="Model\TempLogs.cs" />
     <Compile Include="View\AddPC.xaml.cs">
       <DependentUpon>AddPC.xaml</DependentUpon>
     </Compile>
