@@ -13,7 +13,7 @@ namespace DesktopPart.Model
         public int id { get; set; }
         public string Name { get; set; }
         public string IP { get; set; }
-        public string Port { get; set; }
+        public int Port { get; set; }
         public List<PcDrive> DriveList { get; set; }
         public PcGeneralInfo GeneralInfo { get; set; }
         
@@ -21,6 +21,7 @@ namespace DesktopPart.Model
 
     public class PcGroupe
     {
+        public int id { get; set; }
         public string Name { get; set; }
         public ObservableCollection<PC> PcMs { get; set; }
 

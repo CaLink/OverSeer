@@ -10,26 +10,22 @@ namespace DesktopPart.ModelView
 {
     public class AddPCMV
     {
-        public PC NewPC{ get; set; }
-
-        public string Name { get; set; }
-        public string Ip { get; set; }
+        public PC Pc{ get; set; }
 
         public CustomCUMmand<string> Save { get; set; }
         public AddPCMV()
         {
 
+            Pc = Data.Pc;
+
             Save = new CustomCUMmand<string>(
                 (s) => 
                 {
-                    NewPC = new PC() { IP = Ip, Name = Name};
-                    Data.Pc = NewPC;
-
-
+                    
                     Manager.Close(typeof(AddPC));
                 },()=>
                 {
-                    if (string.IsNullOrEmpty(Name) || string.IsNullOrEmpty(Ip))
+                    if (string.IsNullOrEmpty(Pc.Name) || string.IsNullOrEmpty(Pc.IP) || string.IsNullOrEmpty(Pc.Port.ToString()))
                         return false;
                     else
                         return true;

@@ -166,6 +166,7 @@
     <Compile Include="Controllers\LogsController.cs" />
     <Compile Include="Controllers\PcDrivesController.cs" />
     <Compile Include="Controllers\PcGeneralInfoesController.cs" />
+    <Compile Include="Controllers\PcGroupsController.cs" />
     <Compile Include="Controllers\PcLoadInfoesController.cs" />
     <Compile Include="Controllers\PcsController.cs" />
     <Compile Include="DateTrans.Context.cs">

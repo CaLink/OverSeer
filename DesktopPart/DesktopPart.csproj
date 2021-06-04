@@ -103,6 +103,9 @@
     <Compile Include="View\EditV.xaml.cs">
       <DependentUpon>EditV.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\GroupEditorV.xaml.cs">
+      <DependentUpon>GroupEditorV.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\LogsV.xaml.cs">
       <DependentUpon>LogsV.xaml</DependentUpon>
     </Compile>
@@ -131,6 +134,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\EditV.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\GroupEditorV.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -85,11 +85,14 @@ namespace DesktopPart.ModelView
             Pcs = new List<PC>();
 
             List<PcGroupe> tempGroup = Data.PcGroupe.ToList();
+            
             tempGroup.ForEach(x => 
             {
                 var temp = x.PcMs.ToList();
                 Pcs.AddRange(temp);
             });
+
+            
 
             GetLogs();
 
@@ -101,10 +104,6 @@ namespace DesktopPart.ModelView
             FullLogsList = new List<LogsM>();
             tempL.ForEach(x => FullLogsList.Add((LogsM)x));
             
-            
-
-            
-
             SelectLogs();
         }
 

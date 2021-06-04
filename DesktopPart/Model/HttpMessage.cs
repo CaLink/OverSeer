@@ -60,6 +60,88 @@ namespace DesktopPart.Model
 
         }
 
+        public static async Task<T> MethodPut<T>(string route, T content) where T : class
+        {
+            HttpClient client = new HttpClient();
+            DataContractJsonSerializer dataContract = new DataContractJsonSerializer(typeof(T));
+
+            byte[] bytes = ContentMaker(dataContract, content);
+
+            StringContent sc = new StringContent(Encoding.UTF8.GetString(bytes), Encoding.UTF8, "application/json");
+
+            try
+            {
+                HttpResponseMessage responseMessage = client.PutAsync(serverIP + route, sc).Result;
+                using (var streamResult = await responseMessage.Content.ReadAsStreamAsync())
+                {
+
+                    return (T)dataContract.ReadObject(streamResult);
+                }
+                
+            }
+            catch (Exception e)
+            {
+                System.Windows.MessageBox.Show(e.Message);
+                return null;
+            }
+
+        }
+
+
+        public static async Task<T> MethodPost<T>(string route, T content) where T : class
+        {
+            HttpClient client = new HttpClient();
+            DataContractJsonSerializer dataContract = new DataContractJsonSerializer(typeof(T));
+
+            byte[] bytes = ContentMaker<T>(dataContract, content);
+
+            StringContent sc = new StringContent(Encoding.UTF8.GetString(bytes), Encoding.UTF8, "application/json");
+
+            try
+            {
+                HttpResponseMessage responseMessage = client.PostAsync(serverIP + route, sc).Result;
+
+                using (var streamResult = await responseMessage.Content.ReadAsStreamAsync())
+                {
+
+                    return (T)dataContract.ReadObject(streamResult);
+                }
+            }
+            catch (Exception e)
+            {
+                System.Windows.MessageBox.Show(e.Message);
+                return null;
+            }
+
+        }
+
+        public static async Task<T> MethodDell<T>(string route, int id) where T : class
+        {
+            HttpClient client = new HttpClient();
+            DataContractJsonSerializer dataContract = new DataContractJsonSerializer(typeof(int));
+
+            byte[] bytes = BitConverter.GetBytes(id);
+
+            StringContent sc = new StringContent(Encoding.UTF8.GetString(bytes), Encoding.UTF8, "application/json");
+
+            try
+            {
+                HttpResponseMessage responseMessage = client.DeleteAsync(serverIP + route + "/" + id ).Result;
+                using (var streamResult = await responseMessage.Content.ReadAsStreamAsync())
+                {
+
+                    return (T)dataContract.ReadObject(streamResult);
+                }
+                
+            }
+            catch (Exception e)
+            {
+                System.Windows.MessageBox.Show(e.Message);
+                return null;
+            }
+
+        }
+
 
         public static byte[] ContentMaker<T>(DataContractJsonSerializer dataContract, T content) where T : class
         {

@@ -10,8 +10,8 @@ namespace DesktopPart.Model
 {
     public static class Data
     {
-        public static ObservableCollection<PcGroupe> PcGroupe { get; set; }
-        public static BitmapImage Bmp { get; set; }
-        public static PC Pc{ get; set; }
+        public static ObservableCollection<PcGroupe> PcGroupe { get; set; } = new ObservableCollection<PcGroupe>();
+        public static BitmapImage Bmp { get; set; } = new BitmapImage();
+        public static PC Pc { get; set; } = new PC();
     }
 }

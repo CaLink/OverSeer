@@ -15,7 +15,9 @@ namespace DesktopPart.ModelView
     {
         const string sUPERsECRETnAME = "BiggerLongerUncut";
 
-        public ObservableCollection<PcGroupe> PcGroupes { get; set; }   //TODO Когда-нибудь я научусь не делать 10^6 одинаковых переменных
+        private string virgin;
+        
+        public List<PcGroupe> PcGroupes { get; set; }   //TODO Когда-нибудь я научусь не делать 10^6 одинаковых переменных
         public ObservableCollection<PcGroupe> MainGroupe { get; set; }
 
 
@@ -40,16 +42,23 @@ namespace DesktopPart.ModelView
 
         public EditMV()
         {
-            /*
+
             Init();
 
             AddPC = new CustomCUMmand<string>(
                 (s) =>
                 {
+                    switch (s)
+                    {
+                        case "Chouse": Data.Pc = ChosenGroupePC; break;
+                        case "All": Data.Pc = ChosenAllPC; break;
+                    }
+
                     Manager.AddWindowsOpen(new AddPC());
-                    if (Data.Pc != null)
-                        UnGroupe.PCs.Add(Data.Pc);
-                    Data.Pc = null;
+
+                    Data.Pc = new PC();
+
+
                 });
 
 
@@ -57,32 +66,39 @@ namespace DesktopPart.ModelView
             Save = new CustomCUMmand<string>(
                 (s) =>
                 {
-                    SaveFunc();
+                    List<PcGroupe> temp = new List<PcGroupe>();
+                    temp.Add(UnGroupe);
+                    temp.AddRange(MainGroupe);
+                    
+                    List<PcGroupe> req = HttpMessage.MethodPost("api/PcGroups", temp).Result;
 
-
-
-                    Manager.Close(typeof(EditV));
-                });
-
-            RemovePC = new CustomCUMmand<string>(
-                (s) =>
-                {
-                    UnGroupe.PCs.Remove(ChosenAllPC);
-                },
-                () =>
-                {
-                    if (ChosenAllPC == null)
-                        return false;
+                    if (req.Count == 1)
+                    {
+                        Data.PcGroupe = new ObservableCollection<PcGroupe>(temp);
+                        Manager.Close(typeof(EditV));
+                    }
                     else
-                        return true;
+                    {
+                        System.Windows.MessageBox.Show("Connection Error");
+                        List<PcGroupe> virginList = (List<PcGroupe>)JsonSerializer.Deserialize(virgin, typeof(List<PcGroupe>));
+                        Data.PcGroupe = new ObservableCollection<PcGroupe>(virginList);
+                        Manager.Close(typeof(EditV));
+
+                        
+                    }
+
+
                 });
 
             Remove = new CustomCUMmand<string>(
                 (s) =>
                 {
+
                     PC temp = ChosenGroupePC;
-                    UnGroupe.PCs.Add(temp);
-                    SelectedGroupe.PCs.Remove(temp);
+                    UnGroupe.PcMs.Add(temp);
+                    SelectedGroupe.PcMs.Remove(temp);
+                    ChosenGroupePC = null;
+
 
                 },
                 () =>
@@ -96,13 +112,16 @@ namespace DesktopPart.ModelView
             Add = new CustomCUMmand<string>(
                 (s) =>
                 {
+
                     PC temp = ChosenAllPC;
-                    SelectedGroupe.PCs.Add(temp);
-                    UnGroupe.PCs.Remove(temp);
+                    SelectedGroupe.PcMs.Add(temp);
+                    UnGroupe.PcMs.Remove(temp);
+                    ChosenAllPC = null;
+
                 },
                 () =>
                 {
-                    if (ChosenAllPC == null)
+                    if (ChosenAllPC == null || SelectedGroupe == null)
                         return false;
                     else
                         return true;
@@ -111,23 +130,23 @@ namespace DesktopPart.ModelView
             AddGroupe = new CustomCUMmand<string>(
                 (s) =>
                 {
-                    SelectedGroupe = new PcGroupe { Name = "NewGroupe"};
-                    MainGroupe.Add(SelectedGroupe);
-                    
+
+                    MainGroupe.Add(new PcGroupe() { id = -1, Name = "NewGroup", PcMs = new ObservableCollection<PC>() });
+
+
                 });
 
 
             RemoveGroupe = new CustomCUMmand<string>(
                 (s) =>
                 {
-                    foreach (var item in SelectedGroupe.PCs)
-                    {
-                        UnGroupe.PCs.Add(item);
-                    }
+                    
+                        //TODO Ебанет?
+                        PcGroupe temp = SelectedGroupe;
+                        temp.PcMs.ToList().ForEach(x => unGroupe.PcMs.Add(x));
+                        MainGroupe.Remove(temp);
+                        SelectedGroupe = null;
 
-                    MainGroupe.Remove(SelectedGroupe);
-
-                    SelectedGroupe = null;
                 },
                 () =>
                 {
@@ -136,27 +155,17 @@ namespace DesktopPart.ModelView
                     else
                         return true;
                 });
-            */
+
         }
 
         void Init()
         {
-            PcGroupes = Data.PcGroupe;
-            List<PcGroupe> tempUnCat = PcGroupes.Where(s => s.Name == sUPERsECRETnAME).ToList(); //TODO Придумать Сложно И клАССное имя (ну или зделать проверку на дублирование)
-            List<PcGroupe> tempCat = PcGroupes.Where(s => s.Name != sUPERsECRETnAME).ToList(); //TODO Придумать Сложно И клАССное имя (ну или зделать проверку на дублирование)
+            PcGroupes = new List<PcGroupe>(Data.PcGroupe);
 
-            if (tempUnCat.Count() != 0)
-            {
-                UnGroupe = tempUnCat[0];
-                MainGroupe = new ObservableCollection<PcGroupe>(tempCat);
+            MainGroupe = new ObservableCollection<PcGroupe>(PcGroupes.Where(x => x.id != 1).ToList());
+            UnGroupe = PcGroupes.First(); //TODO Ебанет?
 
-            }
-            else
-            {
-                MainGroupe = new ObservableCollection<PcGroupe>(tempCat);
-                UnGroupe = new PcGroupe() { Name = sUPERsECRETnAME };
-            }
-
+            virgin = JsonSerializer.Serialize(PcGroupes);
 
         }
 

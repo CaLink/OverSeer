@@ -58,18 +58,28 @@
 
                 <Label Content="Current Groupe" Grid.Row="1"/>
                 <Label Content="Uncategorized" Grid.Column="2" Grid.Row="1"/>
-                <ListBox Grid.Row="2" Grid.RowSpan="2" ItemsSource="{Binding SelectedGroupe.PCs}" DisplayMemberPath="Name" SelectedItem="{Binding ChosenGroupePC}"/>
+                <ListBox Grid.Row="2" Grid.RowSpan="2" ItemsSource="{Binding SelectedGroupe.PcMs}" DisplayMemberPath="Name" SelectedItem="{Binding ChosenGroupePC}" >
+                    <ListBox.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="Edit" Command="{Binding AddPC}" CommandParameter="Chouse"/>
+                        </ContextMenu>
+                    </ListBox.ContextMenu>
+                </ListBox>
                 <Button Grid.Row="2" Grid.Column="1" Content="►" Command="{Binding Remove}"/>
                 <Button Grid.Row="3" Grid.Column="1" Content="◄" Command="{Binding Add}"/>
-                <ListBox Grid.Row="2" Grid.RowSpan="2" Grid.Column="2" ItemsSource="{Binding UnGroupe.PCs}" DisplayMemberPath="Name" SelectedItem="{Binding ChosenAllPC}"/>
-                <StackPanel Grid.Row="4" Grid.Column="2" Orientation="Horizontal">
-                    <Button Content="Add" Margin="50 0 20 0" Command="{Binding AddPC}"/>
-                    <Button Content="Remove" Margin="20 0 20 0" Command="{Binding RemovePC}"/>
-                </StackPanel>
+
+                <ListBox Grid.Row="2" Grid.RowSpan="2" Grid.Column="2" ItemsSource="{Binding UnGroupe.PcMs}" DisplayMemberPath="Name" SelectedItem="{Binding ChosenAllPC}">
+                    <ListBox.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="Edit" Command="{Binding AddPC}" CommandParameter="All"/>
+                        </ContextMenu>
+                    </ListBox.ContextMenu>
+                </ListBox>
+
                 <Button Grid.Column="2" Grid.Row="5" HorizontalAlignment="Right" VerticalAlignment="Bottom" Content="Save" Command="{Binding Save}"/>
 
             </Grid>
-            
+
         </GroupBox>
     </Grid>
 </Window>

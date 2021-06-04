@@ -22,11 +22,11 @@ namespace DesktopPart.ModelView
     public class OverSeerMV : NotifyModel
     {
         ObservableCollection<PcGroupe> pcGroupes;
-        public ObservableCollection<PcGroupe> PcGroupes { get { return pcGroupes; } set {pcGroupes =value;RaiseEvent(nameof(pcGroupes)); } } // Очень странно это работает
+        public ObservableCollection<PcGroupe> PcGroupes { get { return pcGroupes; } set { pcGroupes = value; RaiseEvent(nameof(pcGroupes)); } } // Очень странно это работает
 
         PC selectedPC;
         public PC SelectedPC { get { return selectedPC; } set { selectedPC = value as PC; Data.Pc = value as PC; RaiseEvent(nameof(SelectedPC)); } }
-        
+
         private PcLoadInfo pcLoad;
         public PcLoadInfo PcLoad { get { return pcLoad; } set { pcLoad = value; RaiseEvent(nameof(PcLoad)); } }
 
@@ -64,9 +64,21 @@ namespace DesktopPart.ModelView
                 {
                     switch (s)
                     {
-                        case "Edit": Manager.AddWindowsOpen(new EditV()); PcGroupes = Data.PcGroupe; break;
-                        case "UpdateDB":dbInit();break;
-                        case "Log": Manager.AddWindowsOpen(new LogsV()); break;
+                        case "Edit":
+                            if (Data.PcGroupe.Count == 0)
+                            {
+                                System.Windows.MessageBox.Show("Please, Update DB");
+                                return;
+                            }
+                            Manager.AddWindowsOpen(new EditV()); PcGroupes = Data.PcGroupe; break;
+                        case "UpdateDB": dbInit(); break;
+                        case "Log":
+                            if (Data.PcGroupe.Count == 0)
+                            {
+                                System.Windows.MessageBox.Show("Please, Update DB");
+                                return;
+                            }
+                            Manager.AddWindowsOpen(new LogsV()); break;
                         case "Settings": break;
                         case "About": break;
                     }
@@ -115,17 +127,18 @@ namespace DesktopPart.ModelView
 
         private async void dbInit()
         {
-            
+
             List<PcGroupe> temp = await HttpMessage.MethodGet<PcGroupe>("api/Pcs");
             Data.PcGroupe = new ObservableCollection<PcGroupe>(temp);
             PcGroupes = Data.PcGroupe;
             timer.Start();
-            
+
         }
 
         private async void UpdatePc() //TODO Добавить как-то в вечный цикл
         {
             PcLoad = await HttpMessage.MethodGetBut<PcLoadInfo>("api/Pcs/" + SelectedPC.id);
+
         }
 
 
