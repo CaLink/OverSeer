@@ -51,26 +51,6 @@ namespace WebPart.Controllers
 
             });
 
-
-
-            /*
-            pcList.ForEach(x =>  
-            {
-                x.GeneralInfo = (PcGeneralInfoM)db.PcGeneralInfoes.Find(x.id);
-
-                List<PcDriveM> trueDriveList = new List<PcDriveM>();
-                trueDriveList = driveList.Where(z => z.PcID == x.id).Select(z=>(PcDriveM)z).ToList();
-
-                x.DriveList = trueDriveList;
-            });
-
-            groupList.ForEach(x => 
-            {
-                List<PcM> temp = pcList.Where(z => z.GroupID == x.id).ToList();
-                x.PcMs.AddRange(temp);
-            });
-            */
-
             return groupList;
         }
 
@@ -94,38 +74,10 @@ namespace WebPart.Controllers
         }
 
         // PUT: api/Pcs/5
-        [ResponseType(typeof(void))]
-        public async Task<IHttpActionResult> PutPc(int id, Pc pc)
+        [ResponseType(typeof(PcM))]
+        public async Task<IHttpActionResult> PutPc(int id, PcM pc)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            if (id != pc.id)
-            {
-                return BadRequest();
-            }
-
-            db.Entry(pc).State = EntityState.Modified;
-
-            try
-            {
-                await db.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!PcExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return StatusCode(HttpStatusCode.NoContent);
+            return BadRequest();
         }
 
         // POST: api/Pcs

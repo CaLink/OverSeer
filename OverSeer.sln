@@ -6,12 +6,18 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebPart", "WebPart\WebPart.csproj", "{1B6A71FB-8282-41E0-BEB4-88C1C40E82BA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DesktopPart", "DesktopPart\DesktopPart.csproj", "{9FD00ACA-D56E-44CC-8C7C-44F937277B36}"
+	ProjectSection(ProjectDependencies) = postProject
+		{1B6A71FB-8282-41E0-BEB4-88C1C40E82BA} = {1B6A71FB-8282-41E0-BEB4-88C1C40E82BA}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServicePart", "ServicePart\ServicePart.csproj", "{5D2D834F-FB3B-4C80-9F95-D16B24CEA9F6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scatman", "Scatman\Scatman.csproj", "{2146A4DB-2D7D-4BC0-972E-707CF491A180}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NonServicePart", "NonServicePart\NonServicePart.csproj", "{9D81AD29-9A29-49AA-AB97-7F315B77397E}"
+	ProjectSection(ProjectDependencies) = postProject
+		{1B6A71FB-8282-41E0-BEB4-88C1C40E82BA} = {1B6A71FB-8282-41E0-BEB4-88C1C40E82BA}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -21,7 +21,14 @@ namespace DesktopPart.ModelView
             Save = new CustomCUMmand<string>(
                 (s) => 
                 {
+                    PC res = HttpMessage.MethodPost("api/PcEditor/", Pc).Result;
                     
+                    if (res.id == -1)
+                    {
+                        System.Windows.MessageBox.Show("Wrong Input");
+                        return;
+                    }
+
                     Manager.Close(typeof(AddPC));
                 },()=>
                 {

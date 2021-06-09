@@ -51,9 +51,10 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
-                <StackPanel Orientation="Horizontal" Grid.ColumnSpan="2">
+                <StackPanel Orientation="Horizontal" Grid.ColumnSpan="3">
                     <Label Content="Groupe Name"/>
-                    <TextBox Text="{Binding SelectedGroupe.Name}" Width="300"/>
+                    <TextBox Text="{Binding SelectedGroupe.Name}" Width="200"/>
+                    <Button Content="Change Name" Command="{Binding UpdateName}" Margin="5"/>
                 </StackPanel>
 
                 <Label Content="Current Groupe" Grid.Row="1"/>

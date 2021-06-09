@@ -21,6 +21,7 @@ namespace WebPart.Models
             return new PcDriveM
             {
                 Drive = from.Drive,
+                DriveType = from.DriveType,
                 FileSystem = from.FileSystem,
                 AvailabeSpace = from.AvailabeSpace,
                 TotalSize = from.TotalSize

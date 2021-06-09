@@ -16,7 +16,7 @@ namespace DesktopPart.ModelView
         const string sUPERsECRETnAME = "BiggerLongerUncut";
 
         private string virgin;
-        
+
         public List<PcGroupe> PcGroupes { get; set; }   //TODO Когда-нибудь я научусь не делать 10^6 одинаковых переменных
         public ObservableCollection<PcGroupe> MainGroupe { get; set; }
 
@@ -38,6 +38,7 @@ namespace DesktopPart.ModelView
         public CustomCUMmand<string> Remove { get; set; }
         public CustomCUMmand<string> Add { get; set; }
         public CustomCUMmand<string> AddGroupe { get; set; }
+        public CustomCUMmand<string> UpdateName { get; set; }
         public CustomCUMmand<string> RemoveGroupe { get; set; }
 
         public EditMV()
@@ -69,7 +70,7 @@ namespace DesktopPart.ModelView
                     List<PcGroupe> temp = new List<PcGroupe>();
                     temp.Add(UnGroupe);
                     temp.AddRange(MainGroupe);
-                    
+
                     List<PcGroupe> req = HttpMessage.MethodPost("api/PcGroups", temp).Result;
 
                     if (req.Count == 1)
@@ -84,7 +85,7 @@ namespace DesktopPart.ModelView
                         Data.PcGroupe = new ObservableCollection<PcGroupe>(virginList);
                         Manager.Close(typeof(EditV));
 
-                        
+
                     }
 
 
@@ -93,6 +94,13 @@ namespace DesktopPart.ModelView
             Remove = new CustomCUMmand<string>(
                 (s) =>
                 {
+                    PC ret = HttpMessage.MethodDell<PC>("api/PcEditor/", ChosenGroupePC.id).Result;
+
+                    if (ret.id == -1)
+                    {
+                        System.Windows.MessageBox.Show("Wrong Input");
+                        return;
+                    }
 
                     PC temp = ChosenGroupePC;
                     UnGroupe.PcMs.Add(temp);
@@ -112,6 +120,14 @@ namespace DesktopPart.ModelView
             Add = new CustomCUMmand<string>(
                 (s) =>
                 {
+                    PC ret = HttpMessage.MethodPut("api/PcEditor/"+ SelectedGroupe.id, ChosenAllPC ).Result;
+
+                    if (ret.id == -1)
+                    {
+                        System.Windows.MessageBox.Show("Wrong Input");
+                        return;
+                    }
+
 
                     PC temp = ChosenAllPC;
                     SelectedGroupe.PcMs.Add(temp);
@@ -131,21 +147,68 @@ namespace DesktopPart.ModelView
                 (s) =>
                 {
 
-                    MainGroupe.Add(new PcGroupe() { id = -1, Name = "NewGroup", PcMs = new ObservableCollection<PC>() });
+                    PcGroupe newGroup = new PcGroupe() { Name = "NewGroup" };
+                    newGroup = HttpMessage.MethodPost("api/PcGroups", newGroup).Result;
+
+                    if (newGroup.id == 0 || string.IsNullOrWhiteSpace(newGroup.Name))
+                    {
+                        System.Windows.MessageBox.Show("Wrong Input");
+                        return;
+                    }
+
+                    MainGroupe.Add(newGroup);
 
 
                 });
 
 
+            UpdateName = new CustomCUMmand<string>(
+                (s) =>
+                {
+                    PcGroupe result = HttpMessage.MethodPut("api/PcGroups/" + SelectedGroupe.id, SelectedGroupe).Result;
+                    if(result.id != selectedGroupe.id)
+                    {
+                        System.Windows.MessageBox.Show("Wrong Input");
+                    }
+
+
+                }, () =>
+                {
+                    if (SelectedGroupe != null)
+                        if (!string.IsNullOrWhiteSpace(SelectedGroupe.Name))
+                        {
+                            return true;
+                        }
+                        else
+                            return false;
+                    else
+                        return false;
+                });
+
+
+
+
             RemoveGroupe = new CustomCUMmand<string>(
                 (s) =>
                 {
-                    
-                        //TODO Ебанет?
-                        PcGroupe temp = SelectedGroupe;
-                        temp.PcMs.ToList().ForEach(x => unGroupe.PcMs.Add(x));
-                        MainGroupe.Remove(temp);
-                        SelectedGroupe = null;
+
+                    //TODO Ебанет?
+                    PcGroupe respounce = HttpMessage.MethodDell<PcGroupe>("api/PcGroups", SelectedGroupe.id).Result;
+
+                    if (respounce.id == -1)
+                    {
+                        System.Windows.MessageBox.Show("WrongInput");
+                        return;
+                    }
+
+
+
+
+                    PcGroupe temp = SelectedGroupe;
+                    temp.PcMs.ToList().ForEach(x => unGroupe.PcMs.Add(x));
+                    MainGroupe.Remove(temp);
+                    Data.PcGroupe.Remove(temp);
+                    SelectedGroupe = null;
 
                 },
                 () =>

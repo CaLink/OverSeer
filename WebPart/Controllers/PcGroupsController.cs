@@ -44,87 +44,69 @@ namespace WebPart.Controllers
         }
 
         // PUT: api/PcGroups/5
-        [ResponseType(typeof(void))]
-        public async Task<IHttpActionResult> PutPcGroup(int id, PcGroup pcGroup)
+        [ResponseType(typeof(PcGroup))]
+        public async Task<IHttpActionResult> PutPcGroup(int id, PcGroupM pcGroup)
         {
+
             /*
-            if (!ModelState.IsValid)
+             *  Залваем существующую группу
+             *  Вычисляем группу по IP
+             *  Изменяем её параметры
+             *  Возвращаем инфу, получилось ли изменить
+             */
+
+            
+
+            PcGroup updatePc = db.PcGroups.Find(id);
+
+            if (string.IsNullOrWhiteSpace(pcGroup.Name) || updatePc == null  )
             {
-                return BadRequest(ModelState);
+                return Ok(new PcGroupM());
             }
 
-            if (id != pcGroup.id)
-            {
-                return BadRequest();
-            }
-
-            db.Entry(pcGroup).State = EntityState.Modified;
+            updatePc.Name = pcGroup.Name;
 
             try
             {
                 await db.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!PcGroupExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return StatusCode(HttpStatusCode.NoContent);
-            */
-            return BadRequest();
-        }
-
-        // POST: api/PcGroups
-        [ResponseType(typeof(List<PcGroupM>))]
-        public async Task<IHttpActionResult> PostPcGroup(List<PcGroupM> pcGroup)
-        {
-            /*
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            db.PcGroups.Add(pcGroup);
-            await db.SaveChangesAsync();
-
-            return CreatedAtRoute("DefaultApi", new { id = pcGroup.id }, pcGroup);
-            */
-            /*
-            PcGroup toAdd = new PcGroup() { Name = pcGroup.Name};
-
-            db.PcGroups.Add(toAdd);
-
-            try
-            {
-                await db.SaveChangesAsync();
-                return Ok((PcGroupM)toAdd);
+                return Ok((PcGroupM)updatePc);
             }
             catch (Exception e)
             {
-                return Ok(new PcGroupM { id =-1});
-            }*/
+                return Ok(new PcGroupM());
 
+            }
 
+        }
 
+        // POST: api/PcGroups
+        [ResponseType(typeof(PcGroupM))]
+        public async Task<IHttpActionResult> PostPcGroup(PcGroupM pcGroup)
+        {
+            /*
+             *  Получаем "новую группу" (хз про его имя)
+             *  Заливаем её в бд
+             *  Возвращаем новую гуппу с новым id
+             *  Если не фартануло, вернем id-1
+             *  
+             */
+
+            if (string.IsNullOrWhiteSpace(pcGroup.Name))
+            {
+                return Ok(new PcGroupM());
+            }
+
+            PcGroup addedPcGroup = new PcGroup() { Name = pcGroup.Name };
+            db.PcGroups.Add(addedPcGroup);
             try
             {
                 await db.SaveChangesAsync();
-                return Ok(new List<PcGroup>() { new PcGroup() });
+                return Ok((PcGroupM)addedPcGroup);
             }
             catch (Exception)
             {
-                return Ok(new List<PcGroup>());
+                return Ok(new PcGroupM());
             }
-
-
-
 
         }
 
@@ -132,6 +114,16 @@ namespace WebPart.Controllers
         [ResponseType(typeof(PcGroupM))]
         public async Task<IHttpActionResult> DeletePcGroup(int id)
         {
+
+            /*
+             * 
+             * Получаем id группы
+             * Убераем из неё все компы
+             * Удаляем сам комп
+             * Возващаем резульат выполнения
+             * 
+             */
+
 
             List<Pc> pcs = db.Pcs.Where(x => x.PcGroupID == id).ToList();
             pcs.ForEach(x => { x.PcGroupID = 1; db.Entry(x).State = EntityState.Modified; });

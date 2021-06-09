@@ -118,11 +118,12 @@ namespace DesktopPart.Model
         public static async Task<T> MethodDell<T>(string route, int id) where T : class
         {
             HttpClient client = new HttpClient();
-            DataContractJsonSerializer dataContract = new DataContractJsonSerializer(typeof(int));
+            //DataContractJsonSerializer dataContractSend = new DataContractJsonSerializer(typeof(int));
+            DataContractJsonSerializer dataContractRet = new DataContractJsonSerializer(typeof(T));
 
             byte[] bytes = BitConverter.GetBytes(id);
 
-            StringContent sc = new StringContent(Encoding.UTF8.GetString(bytes), Encoding.UTF8, "application/json");
+            //StringContent sc = new StringContent(Encoding.UTF8.GetString(bytes), Encoding.UTF8, "application/json");
 
             try
             {
@@ -130,7 +131,7 @@ namespace DesktopPart.Model
                 using (var streamResult = await responseMessage.Content.ReadAsStreamAsync())
                 {
 
-                    return (T)dataContract.ReadObject(streamResult);
+                    return (T)dataContractRet.ReadObject(streamResult);
                 }
                 
             }
