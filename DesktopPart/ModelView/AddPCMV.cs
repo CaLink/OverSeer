@@ -20,7 +20,7 @@ namespace DesktopPart.ModelView
 
             Save = new CustomCUMmand<string>(
                 (s) => 
-                {
+                {   
                     PC res = HttpMessage.MethodPost("api/PcEditor/", Pc).Result;
                     
                     if (res.id == -1)

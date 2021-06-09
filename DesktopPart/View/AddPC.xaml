@@ -31,7 +31,7 @@
             <Label Content="Port"  Grid.Row="2"/>
             <TextBox Text="{Binding Pc.Port}" Grid.Row="2" Grid.Column="1"/>
 
-            <Button Grid.Column="1" Grid.Row="3" Content="Add" Margin="15" Command="{Binding Save}"/>
+            <Button Grid.Column="1" Grid.Row="3" Content="Edit" Margin="15" Command="{Binding Save}"/>
 
         </Grid>
     </GroupItem>
