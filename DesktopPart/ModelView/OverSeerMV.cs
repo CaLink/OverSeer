@@ -1,6 +1,7 @@
 ﻿using DesktopPart.Model;
 using DesktopPart.View;
 using LiveCharts;
+using LiveCharts.Defaults;
 using LiveCharts.Wpf;
 using System;
 using System.Collections.Generic;
@@ -25,7 +26,8 @@ namespace DesktopPart.ModelView
         public ObservableCollection<PcGroupe> PcGroupes { get { return pcGroupes; } set { pcGroupes = value; RaiseEvent(nameof(pcGroupes)); } } // Очень странно это работает
 
         PC selectedPC;
-        public PC SelectedPC { get { return selectedPC; } set { selectedPC = value as PC; Data.Pc = value as PC; RaiseEvent(nameof(SelectedPC)); } }
+        public PC SelectedPC { get { return selectedPC; } set { selectedPC = value as PC; Data.Pc = value as PC; PrepareChart(); RaiseEvent(nameof(SelectedPC)); } }
+
 
         private PcLoadInfo pcLoad;
         public PcLoadInfo PcLoad { get { return pcLoad; } set { pcLoad = value; RaiseEvent(nameof(PcLoad)); } }
@@ -41,9 +43,9 @@ namespace DesktopPart.ModelView
         private string ramBoss;
         public string RamBoss { get { return ramBoss; } set { ramBoss = value; RaiseEvent(nameof(RamBoss)); } }
 
-        private SeriesCollection cpuChart;
-
-        public SeriesCollection CpuChart { get { return cpuChart; } set { cpuChart = value; } }
+        public SeriesCollection CpuChart { get; set; }
+        public SeriesCollection CpuChartByCore { get; set; }
+        public SeriesCollection RamChart { get; set; }
 
         System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer();
 
@@ -57,6 +59,35 @@ namespace DesktopPart.ModelView
         {
             timer.Tick += Timer_Tick;
             timer.Interval = 3000;
+
+            CpuChart = new SeriesCollection
+            {
+                new ColumnSeries
+                {
+                    Title = "Cpu%",
+                    Values = new ChartValues<double> { 0 }
+                }
+            };
+
+            RamChart = new SeriesCollection
+            {
+                new ColumnSeries
+                {
+                    Title = "Ram%",
+                    Values = new ChartValues<double> { 0 }
+                }
+            };
+
+            
+
+            CpuChartByCore = new SeriesCollection();
+
+            for (int i = 0; i < 5; i++)
+            {
+                CpuChartByCore.Add(new LineSeries { Title = $"Core{i + 1}", Values = new ChartValues<double>() });
+            }
+
+
             dbInit();
 
             MenuButton = new CustomCUMmand<string>(
@@ -121,8 +152,21 @@ namespace DesktopPart.ModelView
 
         private void Timer_Tick(object sender, EventArgs e)
         {
-            if (SelectedPC != null)
-                UpdatePc();
+            if (SelectedPC == null)
+                return;
+
+            UpdatePc();
+            if (PcLoad == null)
+                return;
+
+            CpuChart[0].Values[0] = (double)PcLoad.CpuLoad;
+            RamChart[0].Values[0] = (double)PcLoad.RamLoad;
+            for (int i = 0; i < CpuChartByCore.Count; i++)
+            {
+                CpuChartByCore[i].Values.Add((double)PcLoad.CpuLoadByCore[i]);
+            }
+
+
         }
 
         private async void dbInit()
@@ -131,6 +175,8 @@ namespace DesktopPart.ModelView
             List<PcGroupe> temp = await HttpMessage.MethodGet<PcGroupe>("api/Pcs");
             Data.PcGroupe = new ObservableCollection<PcGroupe>(temp);
             PcGroupes = Data.PcGroupe;
+
+
             timer.Start();
 
         }
@@ -138,8 +184,15 @@ namespace DesktopPart.ModelView
         private async void UpdatePc() //TODO Добавить как-то в вечный цикл
         {
             PcLoad = await HttpMessage.MethodGetBut<PcLoadInfo>("api/Pcs/" + SelectedPC.id);
+        }
+
+        private void PrepareChart()
+        {
+            
+
 
         }
+
 
 
         private BitmapImage Translate(Bitmap jpeg)

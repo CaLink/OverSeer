@@ -7,9 +7,10 @@
         xmlns:custom="clr-namespace:DesktopPart.CUstoM"
         xmlns:ViewModel="clr-namespace:DesktopPart.ModelView"
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
         mc:Ignorable="d"
         Title="OverSeerV" Height="450" Width="800">
-    
+
     <Window.Resources>
         <ViewModel:OverSeerMV x:Key="View"/>
     </Window.Resources>
@@ -37,7 +38,7 @@
         </Menu>
 
         <GroupBox Grid.Row="1" Margin="10">
-            
+
             <!--
             <ListBox ItemsSource="{Binding PCs}" DisplayMemberPath="Name" SelectedItem="{Binding SelectedPC}">
                 <i:Interaction.Triggers>
@@ -69,8 +70,12 @@
         </GroupBox>
 
         <Grid Grid.Column="1" Grid.Row="1" Visibility="{Binding Converter}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="67*"/>
+                <ColumnDefinition Width="197*"/>
+            </Grid.ColumnDefinitions>
 
-            <TabControl Margin="10">
+            <TabControl Margin="10" Grid.ColumnSpan="2">
 
                 <TabItem Header="Main">
 
@@ -148,7 +153,45 @@
 
                 <TabItem Header="Graphs">
                     <GroupBox>
-                        <custom:UserControl1  SeriesCollection="{Binding  }"></custom:UserControl1>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+
+
+                            <lvc:CartesianChart Series="{Binding CpuChart}" LegendLocation="Bottom">
+                                <lvc:CartesianChart.AxisX>
+                                    <lvc:Axis Title="Cpu%" MinValue="0" MaxValue="1"></lvc:Axis>
+                                </lvc:CartesianChart.AxisX>
+                                <lvc:CartesianChart.AxisY>
+                                    <lvc:Axis Title="Value" MaxValue="100" MinValue="0" ></lvc:Axis>
+                                </lvc:CartesianChart.AxisY>
+                            </lvc:CartesianChart>
+
+                            <lvc:CartesianChart Series="{Binding RamChart}" LegendLocation="Bottom" Grid.Row="1">
+                                <lvc:CartesianChart.AxisX>
+                                    <lvc:Axis Title="Cpu%" MinValue="0" MaxValue="1"></lvc:Axis>
+                                </lvc:CartesianChart.AxisX>
+                                <lvc:CartesianChart.AxisY>
+                                    <lvc:Axis Title="Value" MaxValue="100" MinValue="0" ></lvc:Axis>
+                                </lvc:CartesianChart.AxisY>
+                            </lvc:CartesianChart>
+
+                            <lvc:CartesianChart Series="{Binding CpuChartByCore}" LegendLocation="Bottom" Grid.Column="1" Grid.RowSpan="2">
+                                <lvc:CartesianChart.AxisY>
+                                    <lvc:Axis Title="Value" MaxValue="100" MinValue="0"  ></lvc:Axis>
+                                </lvc:CartesianChart.AxisY>
+                                <lvc:CartesianChart.AxisX>
+                                    <lvc:Axis Title="Cores%" ></lvc:Axis>
+                                </lvc:CartesianChart.AxisX>
+                            </lvc:CartesianChart>
+
+                        </Grid>
                     </GroupBox>
                 </TabItem>
 
@@ -206,7 +249,7 @@
                                     </GridView>
                                 </ListView.View>
                             </ListView>
-                            
+
                         </Grid>
                     </GroupItem>
                 </TabItem>

@@ -92,6 +92,11 @@ namespace NonServicePart
                 }
 
             Pc temp = HttpMessage.MethodPost("api/Pcs", pc).Result;
+            if (temp == null)
+            {
+                return null;
+
+            }
 
             using (FileStream fs = new FileStream("Secret.Data", FileMode.Create, FileAccess.Write))
             using (StreamWriter sw = new StreamWriter(fs))
