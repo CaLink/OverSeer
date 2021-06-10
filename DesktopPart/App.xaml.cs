@@ -49,5 +49,11 @@ namespace DesktopPart
             if (openedWindows.Count == 0)
                 App.Current.Shutdown();
         }
+
+        public static OverSeerV GetOverSeerV()
+        {
+            return (OverSeerV)openedWindows[0];
+        }
+
     }
 }

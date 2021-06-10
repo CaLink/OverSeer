@@ -79,14 +79,14 @@ namespace DesktopPart.ModelView
             };
 
             
-
+            /*
             CpuChartByCore = new SeriesCollection();
 
             for (int i = 0; i < 5; i++)
             {
                 CpuChartByCore.Add(new LineSeries { Title = $"Core{i + 1}", Values = new ChartValues<double>() });
             }
-
+            */
 
             dbInit();
 
@@ -111,7 +111,24 @@ namespace DesktopPart.ModelView
                             }
                             Manager.AddWindowsOpen(new LogsV()); break;
                         case "Settings": break;
-                        case "About": break;
+                        case "About":
+                            if (selectedPC == null)
+                                return;
+
+                            CpuChartByCore = new SeriesCollection();
+
+
+                            for (int i = 0; i < selectedPC.GeneralInfo.LogicalProcessors; i++)
+                            {
+                                LineSeries temp = new LineSeries();
+                                temp.Title = "Core " + i + 1;
+                                temp.Values = new ChartValues<double>();
+                                CpuChartByCore.Add(temp);
+
+                                //CpuChartByCore.Add(new LineSeries() { Title = $"Core{i + 1}", Values = new ChartValues<double>() });
+
+                            }
+                            break;
                     }
                 });
 
@@ -158,7 +175,8 @@ namespace DesktopPart.ModelView
             UpdatePc();
             if (PcLoad == null)
                 return;
-
+            if (CpuChartByCore.Count > PcLoad.CpuLoadByCore.Count)
+                return;
             CpuChart[0].Values[0] = (double)PcLoad.CpuLoad;
             RamChart[0].Values[0] = (double)PcLoad.RamLoad;
             for (int i = 0; i < CpuChartByCore.Count; i++)
@@ -188,7 +206,8 @@ namespace DesktopPart.ModelView
 
         private void PrepareChart()
         {
-            
+
+            CpuChartByCore = Manager.GetOverSeerV().RemakeChart(selectedPC.GeneralInfo.LogicalProcessors);
 
 
         }

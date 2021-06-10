@@ -34,7 +34,7 @@
 
             <MenuItem Header="Log" Command="{Binding MenuButton}" CommandParameter="Log"/>
             <MenuItem Header="Settings" Command="{Binding MenuButton}" CommandParameter="Settings"/>
-            <MenuItem Header="About" Command="{Binding MenuButton}" CommandParameter="About"/>
+            <MenuItem Header="About" Command="{Binding MenuButton}" CommandParameter="About" Click="MenuItem_Click"/>
         </Menu>
 
         <GroupBox Grid.Row="1" Margin="10">
@@ -182,7 +182,7 @@
                                 </lvc:CartesianChart.AxisY>
                             </lvc:CartesianChart>
 
-                            <lvc:CartesianChart Series="{Binding CpuChartByCore}" LegendLocation="Bottom" Grid.Column="1" Grid.RowSpan="2">
+                            <lvc:CartesianChart x:Name="sas"  LegendLocation="Bottom" Grid.Column="1" Grid.RowSpan="2">
                                 <lvc:CartesianChart.AxisY>
                                     <lvc:Axis Title="Value" MaxValue="100" MinValue="0"  ></lvc:Axis>
                                 </lvc:CartesianChart.AxisY>
