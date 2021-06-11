@@ -32,6 +32,8 @@ namespace DesktopPart.ModelView
         private PcLoadInfo pcLoad;
         public PcLoadInfo PcLoad { get { return pcLoad; } set { pcLoad = value; RaiseEvent(nameof(PcLoad)); } }
 
+        private ObservableCollection<Proc> processList;
+        public ObservableCollection<Proc> ProcessList { get { return processList; } set { processList = value; RaiseEvent(nameof(ProcessList)); } }
 
 
         private BitmapImage jpeg;
@@ -54,6 +56,7 @@ namespace DesktopPart.ModelView
         public CustomCUMmand<string> GetInfo { get; set; }
         public CustomCUMmand<string> UpdateJPEG { get; set; }
         public CustomCUMmand<string> ShowPick { get; set; }
+        public CustomCUMmand<string> UpdateProcessList { get; set; }
 
         public OverSeerMV()
         {
@@ -78,7 +81,7 @@ namespace DesktopPart.ModelView
                 }
             };
 
-            
+
             /*
             CpuChartByCore = new SeriesCollection();
 
@@ -135,13 +138,40 @@ namespace DesktopPart.ModelView
             GetInfo = new CustomCUMmand<string>(
                 (s) =>
                 {
-                    //МертвыйМетод
+                    //МертвыйМетод (на всякий случай)
+                });
+
+            UpdateProcessList = new CustomCUMmand<string>(
+                async (s) =>
+                {
+                    string tempJson = await HttpMessage.MethodGetBut<string>("api/ListProc/" + SelectedPC.id);
+                    List<Proc> tempProc = JsonSerializer.Deserialize<List<Proc>>(tempJson);
+                    ProcessList = new ObservableCollection<Proc>(tempProc);
+
+                },
+                () =>
+                {
+                    if (SelectedPC == null)
+                        return false;
+                    else
+                        return true;
                 });
 
             UpdateJPEG = new CustomCUMmand<string>(
-                (s) =>
+                async (s) =>
                 {
-                    //JPEG = DoJpegMessage();
+                    try
+                    {
+                        string tempJson = await HttpMessage.MethodGetBut<string>("api/ByteJpeg/" + SelectedPC.id);
+                        ByteJpeg byteJpeg = JsonSerializer.Deserialize<ByteJpeg>(tempJson);
+                        JPEG = Translate(byteJpeg.Jpeg);
+                        Data.Bmp = JPEG;
+                    }
+                    catch
+                    {
+                        return;
+                    }
+
                 },
                 () =>
                 {
@@ -154,6 +184,7 @@ namespace DesktopPart.ModelView
             ShowPick = new CustomCUMmand<string>(
                 (s) =>
                 {
+                    Data.Pc = SelectedPC;
                     new PickShowerV().ShowDialog();
                     JPEG = Data.Bmp;
                 },
@@ -214,12 +245,13 @@ namespace DesktopPart.ModelView
 
 
 
-        private BitmapImage Translate(Bitmap jpeg)
+        private BitmapImage Translate(byte[] jpeg)
         {
-            using (MemoryStream ms = new MemoryStream())
+            if (jpeg == null)
+                return null;
+
+            using (MemoryStream ms = new MemoryStream(jpeg))
             {
-                jpeg.Save(ms, ImageFormat.Png);
-                ms.Position = 0;
 
                 BitmapImage bmp = new BitmapImage();
                 bmp.BeginInit();

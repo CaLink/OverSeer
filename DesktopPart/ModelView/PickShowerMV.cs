@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
@@ -27,10 +28,20 @@ namespace DesktopPart.ModelView
             BMP = Data.Bmp;
 
             Refresh = new CustomCUMmand<string>(
-                (s) =>
+                async (s) =>
                 {
-                    BMP = DoJpegMessage();
-                    Data.Bmp = BMP;
+                    try
+                    {
+                        string tempJson = await HttpMessage.MethodGetBut<string>("api/ByteJpeg/" + Data.Pc.id);
+                        ByteJpeg byteJpeg = JsonSerializer.Deserialize<ByteJpeg>(tempJson);
+                        BMP = Translate(byteJpeg.Jpeg);
+                        Data.Bmp = BMP;
+                    }
+                    catch (Exception)
+                    {
+
+                        return;
+                    }
                 });
 
             Save = new CustomCUMmand<string>(
@@ -41,7 +52,7 @@ namespace DesktopPart.ModelView
                     if (sfd.ShowDialog() != true)
                         return;
 
-                    using (FileStream fs = new FileStream(sfd.FileName,FileMode.Create, FileAccess.Write))
+                    using (FileStream fs = new FileStream(sfd.FileName, FileMode.Create, FileAccess.Write))
                     {
                         BitmapEncoder bme = new BmpBitmapEncoder();
                         bme.Frames.Add(BitmapFrame.Create(BMP));
@@ -51,63 +62,13 @@ namespace DesktopPart.ModelView
                 });
         }
 
-
-        //TODO Дублирование говноКода
-        private BitmapImage DoJpegMessage()
+        private BitmapImage Translate(byte[] jpeg)
         {
-            Bitmap jpeg = null;
-
-            try
-            {
-                byte[] data = Encoding.UTF8.GetBytes("GetJpeg");
-
-                byte[] leng = new byte[4];
-                int dataLeng = 0;
-
-
-                TcpClient client = new TcpClient();
-                client.Connect(Data.Pc.IP, 1488);
-
-                NetworkStream ns = client.GetStream();
-                ns.Write(data, 0, data.Length);
-
-                int bytesRead = ns.Read(leng, 0, 4); // TODO Убрать
-                dataLeng = BitConverter.ToInt32(leng, 0); // TODO Убрать
-
-                jpeg = new Bitmap(ns);
-
-
-                ns.Close();
-                client.Close();
-
-
-                BitmapImage returnal = new BitmapImage();
-
-                returnal = Translate(jpeg);
-                Data.Bmp = returnal;
-
-                return returnal;
-
-
-
-            }
-            catch (Exception e)
-            {
-
-                System.Windows.MessageBox.Show("Lost connection\n" + e.Message);
+            if (jpeg == null)
                 return null;
 
-            }
-
-
-
-        }
-        private BitmapImage Translate(Bitmap jpeg)
-        {
-            using (MemoryStream ms = new MemoryStream())
+            using (MemoryStream ms = new MemoryStream(jpeg))
             {
-                jpeg.Save(ms, ImageFormat.Png);
-                ms.Position = 0;
 
                 BitmapImage bmp = new BitmapImage();
                 bmp.BeginInit();
@@ -121,6 +82,6 @@ namespace DesktopPart.ModelView
                 return bmp;
             }
         }
-       
+
     }
 }

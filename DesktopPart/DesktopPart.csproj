@@ -89,6 +89,7 @@
     <Compile Include="ModelView\EditMV.cs" />
     <Compile Include="ModelView\LogsMV.cs" />
     <Compile Include="ModelView\PickShowerMV.cs" />
+    <Compile Include="Model\ByteJpeg.cs" />
     <Compile Include="Model\Data.cs" />
     <Compile Include="Model\HttpMessage.cs" />
     <Compile Include="Model\LogsM.cs" />
@@ -96,6 +97,7 @@
     <Compile Include="Model\PcDrive.cs" />
     <Compile Include="Model\PcGeneralInfo.cs" />
     <Compile Include="Model\PcLoadInfo.cs" />
+    <Compile Include="Model\Proc.cs" />
     <Compile Include="Model\TempLogs.cs" />
     <Compile Include="View\AddPC.xaml.cs">
       <DependentUpon>AddPC.xaml</DependentUpon>

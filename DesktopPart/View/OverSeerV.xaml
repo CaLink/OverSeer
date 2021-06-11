@@ -136,18 +136,21 @@
 
                 <TabItem Header="Processes">
                     <GroupBox>
-                        <ListView Margin=" 0 3 0 2" ItemsSource="{Binding PInfo.ProcessList}">
-                            <ListView.View>
-                                <GridView>
-                                    <GridViewColumn Header="ID" DisplayMemberBinding="{Binding Path=ID}"/>
-                                    <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Path=Name}"/>
-                                    <!--<GridViewColumn Header="User"/>-->
-                                    <GridViewColumn Header="CPU %" DisplayMemberBinding="{Binding Path=Cpu}"/>
-                                    <GridViewColumn Header="RAM (Working Set)" DisplayMemberBinding="{Binding Path=Ram}"/>
-                                    <!--<GridViewColumn Header="Description"/>-->
-                                </GridView>
-                            </ListView.View>
-                        </ListView>
+                        <Grid>
+                            <ListView Margin=" 0 3 0 2" ItemsSource="{Binding ProcessList}">
+                                <ListView.View>
+                                    <GridView>
+                                        <GridViewColumn Header="ID" DisplayMemberBinding="{Binding Path=ID}"/>
+                                        <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Path=Name}"/>
+                                        <!--<GridViewColumn Header="User"/>-->
+                                        <GridViewColumn Header="CPU %" DisplayMemberBinding="{Binding Path=Cpu}"/>
+                                        <GridViewColumn Header="RAM (Working Set)" DisplayMemberBinding="{Binding Path=Ram}"/>
+                                        <!--<GridViewColumn Header="Description"/>-->
+                                    </GridView>
+                                </ListView.View>
+                            </ListView>
+                            <Button Content="Ѡ" Margin=" 0 0 5 7" HorizontalAlignment="Right" VerticalAlignment="Bottom" Command="{Binding UpdateProcessList}"/>
+                        </Grid>
                     </GroupBox>
                 </TabItem>
 

@@ -24,6 +24,10 @@ namespace NonServicePart
 
         Pc pc = new Pc();
 
+        IPAddress ipAddress;
+        int port = 1488;
+        TcpListener hey;
+
         System.Windows.Forms.Timer time = new System.Windows.Forms.Timer();
 
         ManagementObjectSearcher searcher1 = new ManagementObjectSearcher("root\\CIMV2", "SELECT Name,NumberOfCores,NumberOfLogicalProcessors,SocketDesignation,SystemName FROM Win32_Processor");
@@ -58,16 +62,94 @@ namespace NonServicePart
                 SendLogs(e.ToString());
             }
 
+
             dbInit();
 
             time.Start();
 
+            hey = new TcpListener(IPAddress.Any, 1488);
+            Thread tcpThread = new Thread(new ThreadStart(ListenTCP));
+            tcpThread.Start();
         }
 
         private void Time_Tick(object sender, EventArgs e)
         {
             Listen();
         }
+
+        public void ListenTCP()
+        {
+            string mes;
+            byte[] send;
+
+            hey.Start();
+
+            //TODO Механизм выхода
+            while (true)
+            {
+                TcpClient client = hey.AcceptTcpClient();
+                NetworkStream ns = client.GetStream();
+
+                mes = GetMessage(ns);
+
+                send = PrepareMessage(mes);
+
+                ns.Write(send, 0, send.Length);
+
+                ns.Close();
+                client.Close();
+
+            }
+        }
+        string GetMessage(NetworkStream ns)
+        {
+            string message = "";
+
+            byte[] data = new byte[64];
+            StringBuilder sb = new StringBuilder();
+            int bytes = 0;
+
+            do
+            {
+                bytes = ns.Read(data, 0, data.Length);
+                sb.Append(Encoding.UTF8.GetString(data, 0, bytes));
+            }
+            while (ns.DataAvailable);
+
+            message = sb.ToString();
+
+            return message;
+        }
+
+        byte[] PrepareMessage(string type)
+        {
+            string mes = "";
+            byte[] preparedMessage = new byte[0];
+
+            switch (type)
+            {
+                case "jpg":
+
+                    ByteJpeg jpegmess = new ByteJpeg { Jpeg = GetJpeg() };
+
+                    mes = JsonSerializer.Serialize<ByteJpeg>(jpegmess);
+                    preparedMessage = Encoding.UTF8.GetBytes(mes);
+
+                    break;
+
+                case "prc":
+
+                    List<Proc> pl = GetProcList();
+                    mes = JsonSerializer.Serialize<List<Proc>>(pl);
+                    preparedMessage = Encoding.UTF8.GetBytes(mes);
+
+                    break;
+                
+            }
+
+            return preparedMessage;
+        }
+
 
         private void dbInit()
         {
@@ -129,11 +211,40 @@ namespace NonServicePart
 
         private void SendLogs(string ex)
         {
-            HttpMessage.MethodPut("api/Logs" + pc.id, ex);
+            HttpMessage.MethodPut("api/Logs/" + pc.id, ex);
             logs.WriteEntry($"{DateTime.Now}\n" + ex, EventLogEntryType.Error, logsID++);
 
         }
 
+        private List<Proc> GetProcList()
+        {
+            List<Proc> ret = new List<Proc>();
+
+            try
+            {
+
+                Proc newProc = new Proc();
+                foreach (ManagementObject queryObj in searcher3.Get())
+                {
+                    newProc.ID = int.Parse(queryObj["IDProcess"].ToString());
+                    newProc.Name = queryObj["Name"].ToString();
+                    newProc.Cpu = int.Parse(queryObj["PercentProcessorTime"].ToString());
+                    //newProc.Ram = ulong.Parse(queryObj["WorkingSet"].ToString());
+                    newProc.Ram = ulong.Parse(queryObj["WorkingSetPrivate"].ToString()); //Or WorkingSet
+
+                    if (newProc.Name == "Idle" || newProc.Name == "_Total")
+                        continue;
+
+                    ret.Add(newProc);
+                }
+            }
+            catch (ManagementException e)
+            {
+                SendLogs(e.ToString());
+            }
+
+            return ret;
+        }
 
 
 
@@ -282,18 +393,14 @@ namespace NonServicePart
                 mes = ms.ToArray();
             }
 
+            /*
             length = BitConverter.GetBytes(mes.Length);
             ret = new byte[4 + mes.Length];
             length.CopyTo(ret, 0);
             mes.CopyTo(ret, 4);
+            */
 
-            int test = 0;
-            foreach (var item in mes)
-            {
-                test += item;
-            }
-
-            return ret;
+            return mes;
         }
     }
 
