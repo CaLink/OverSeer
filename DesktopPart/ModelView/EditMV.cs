@@ -71,22 +71,8 @@ namespace DesktopPart.ModelView
                     temp.Add(UnGroupe);
                     temp.AddRange(MainGroupe);
 
-                    List<PcGroupe> req = HttpMessage.MethodPost("api/PcGroups", temp).Result;
-
-                    if (req.Count == 1)
-                    {
-                        Data.PcGroupe = new ObservableCollection<PcGroupe>(temp);
-                        Manager.Close(typeof(EditV));
-                    }
-                    else
-                    {
-                        System.Windows.MessageBox.Show("Connection Error");
-                        List<PcGroupe> virginList = (List<PcGroupe>)JsonSerializer.Deserialize(virgin, typeof(List<PcGroupe>));
-                        Data.PcGroupe = new ObservableCollection<PcGroupe>(virginList);
-                        Manager.Close(typeof(EditV));
-
-
-                    }
+                    Data.PcGroupe = new ObservableCollection<PcGroupe>(temp);
+                    Manager.Close(typeof(EditV));
 
 
                 });
@@ -120,7 +106,7 @@ namespace DesktopPart.ModelView
             Add = new CustomCUMmand<string>(
                 (s) =>
                 {
-                    PC ret = HttpMessage.MethodPut("api/PcEditor/"+ SelectedGroupe.id, ChosenAllPC ).Result;
+                    PC ret = HttpMessage.MethodPut("api/PcEditor/" + SelectedGroupe.id, ChosenAllPC).Result;
 
                     if (ret.id == -1)
                     {
@@ -166,7 +152,7 @@ namespace DesktopPart.ModelView
                 (s) =>
                 {
                     PcGroupe result = HttpMessage.MethodPut("api/PcGroups/" + SelectedGroupe.id, SelectedGroupe).Result;
-                    if(result.id != selectedGroupe.id)
+                    if (result.id != selectedGroupe.id)
                     {
                         System.Windows.MessageBox.Show("Wrong Input");
                     }
@@ -232,7 +218,7 @@ namespace DesktopPart.ModelView
             PcGroupes = new List<PcGroupe>(Data.PcGroupe);
 
             MainGroupe = new ObservableCollection<PcGroupe>(PcGroupes.Where(x => x.id != 1).ToList());
-            
+
             UnGroupe = PcGroupes.First(); //TODO Ебанет? //Дааа, ебнул
 
             virgin = JsonSerializer.Serialize(PcGroupes);
