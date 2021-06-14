@@ -223,10 +223,17 @@ namespace DesktopPart.ModelView
 
         void Init()
         {
+            if (Data.PcGroupe.Count < 1)
+            {
+                System.Windows.MessageBox.Show("Connection Fall");
+                return;
+            }
+
             PcGroupes = new List<PcGroupe>(Data.PcGroupe);
 
             MainGroupe = new ObservableCollection<PcGroupe>(PcGroupes.Where(x => x.id != 1).ToList());
-            UnGroupe = PcGroupes.First(); //TODO Ебанет?
+            
+            UnGroupe = PcGroupes.First(); //TODO Ебанет? //Дааа, ебнул
 
             virgin = JsonSerializer.Serialize(PcGroupes);
 

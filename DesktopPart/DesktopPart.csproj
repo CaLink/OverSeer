@@ -99,6 +99,9 @@
     <Compile Include="Model\PcLoadInfo.cs" />
     <Compile Include="Model\Proc.cs" />
     <Compile Include="Model\TempLogs.cs" />
+    <Compile Include="View\AboutV.xaml.cs">
+      <DependentUpon>AboutV.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\AddPC.xaml.cs">
       <DependentUpon>AddPC.xaml</DependentUpon>
     </Compile>
@@ -131,6 +134,10 @@
     <Compile Include="ModelView\NotifyModel.cs" />
     <Compile Include="ModelView\OverSeerMV.cs" />
     <Compile Include="Model\CustomCUMmand.cs" />
+    <Page Include="View\AboutV.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\AddPC.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

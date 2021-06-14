@@ -53,7 +53,7 @@
 
                 <StackPanel Orientation="Horizontal" Grid.ColumnSpan="3">
                     <Label Content="Groupe Name"/>
-                    <TextBox Text="{Binding SelectedGroupe.Name}" Width="200"/>
+                    <TextBox Text="{Binding SelectedGroupe.Name}" Width="200" MaxLength="99"/>
                     <Button Content="Change Name" Command="{Binding UpdateName}" Margin="5"/>
                 </StackPanel>
 

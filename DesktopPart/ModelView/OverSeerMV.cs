@@ -4,6 +4,7 @@ using LiveCharts;
 using LiveCharts.Defaults;
 using LiveCharts.Wpf;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Drawing;
@@ -11,6 +12,8 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Net.Sockets;
+using System.Runtime.InteropServices;
+using System.Security;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -22,6 +25,13 @@ namespace DesktopPart.ModelView
 {
     public class OverSeerMV : NotifyModel
     {
+        [SuppressUnmanagedCodeSecurity]
+        [DllImport("shlwapi.dll", CharSet = CharSet.Unicode)]
+        public static extern int StrCmpLogicalW(string psz1, string psz2);
+        static string lastColumn;
+        static bool columnChecher;
+
+
         ObservableCollection<PcGroupe> pcGroupes;
         public ObservableCollection<PcGroupe> PcGroupes { get { return pcGroupes; } set { pcGroupes = value; RaiseEvent(nameof(pcGroupes)); } } // Очень странно это работает
 
@@ -114,24 +124,8 @@ namespace DesktopPart.ModelView
                             }
                             Manager.AddWindowsOpen(new LogsV()); break;
                         case "Settings": break;
-                        case "About":
-                            if (selectedPC == null)
-                                return;
+                        case "About": break;
 
-                            CpuChartByCore = new SeriesCollection();
-
-
-                            for (int i = 0; i < selectedPC.GeneralInfo.LogicalProcessors; i++)
-                            {
-                                LineSeries temp = new LineSeries();
-                                temp.Title = "Core " + i + 1;
-                                temp.Values = new ChartValues<double>();
-                                CpuChartByCore.Add(temp);
-
-                                //CpuChartByCore.Add(new LineSeries() { Title = $"Core{i + 1}", Values = new ChartValues<double>() });
-
-                            }
-                            break;
                     }
                 });
 
@@ -212,6 +206,8 @@ namespace DesktopPart.ModelView
             RamChart[0].Values[0] = (double)PcLoad.RamLoad;
             for (int i = 0; i < CpuChartByCore.Count; i++)
             {
+                if (CpuChartByCore[i].Values.Count > 10)
+                    CpuChartByCore[i].Values.RemoveAt(0);
                 CpuChartByCore[i].Values.Add((double)PcLoad.CpuLoadByCore[i]);
             }
 
@@ -222,6 +218,9 @@ namespace DesktopPart.ModelView
         {
 
             List<PcGroupe> temp = await HttpMessage.MethodGet<PcGroupe>("api/Pcs");
+            if (temp == null)
+                return;
+
             Data.PcGroupe = new ObservableCollection<PcGroupe>(temp);
             PcGroupes = Data.PcGroupe;
 
@@ -267,5 +266,39 @@ namespace DesktopPart.ModelView
         }
 
 
+
+        public void RaiseSort(string header, IEnumerable itemSource)
+        {
+            if (lastColumn == header)
+                if (columnChecher) columnChecher = false;
+                else columnChecher = true;
+            else columnChecher = false;
+            lastColumn = header;
+
+            var list = (ObservableCollection<Proc>)itemSource;
+            var temp = list.ToList();
+            temp.Sort((x, y) =>
+            {
+                if (header == "ID" || header == "Name")
+                {
+                    var prop = typeof(Proc).GetProperty(header);
+                    if (columnChecher) return StrCmpLogicalW(prop.GetValue(x).ToString(), prop.GetValue(y).ToString());
+                    else return StrCmpLogicalW(prop.GetValue(y).ToString(), prop.GetValue(x).ToString());
+                }
+                else
+                    switch (header)
+                    {
+                        case "CPU %":
+                            if (columnChecher) return StrCmpLogicalW(x.Cpu.ToString(), y.Cpu.ToString());
+                            else return StrCmpLogicalW(y.Cpu.ToString(), x.Cpu.ToString());
+                        default:
+                            if (columnChecher) return StrCmpLogicalW(x.Ram.ToString(), y.Ram.ToString());
+                            else return StrCmpLogicalW(y.Ram.ToString(), x.Ram.ToString());
+                    }
+            });
+
+            ProcessList = new ObservableCollection<Proc>(temp);
+
+        }
     }
 }

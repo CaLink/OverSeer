@@ -15,7 +15,7 @@
         <ViewModel:OverSeerMV x:Key="View"/>
     </Window.Resources>
 
-    <Grid DataContext="{StaticResource View}">
+    <Grid x:Name="gridContext" DataContext="{StaticResource View}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="2*"/>
@@ -32,9 +32,8 @@
                 <MenuItem Header="Update DB" Command="{Binding MenuButton}" CommandParameter="UpdateDB"/>
             </MenuItem>
 
-            <MenuItem Header="Log" Command="{Binding MenuButton}" CommandParameter="Log"/>
-            <MenuItem Header="Settings" Command="{Binding MenuButton}" CommandParameter="Settings"/>
-            <MenuItem Header="About" Command="{Binding MenuButton}" CommandParameter="About" Click="MenuItem_Click"/>
+            <MenuItem Header="Logs" Command="{Binding MenuButton}" CommandParameter="Log"/>
+            <MenuItem Header="About" Command="{Binding MenuButton}" CommandParameter="About"/>
         </Menu>
 
         <GroupBox Grid.Row="1" Margin="10">
@@ -137,7 +136,7 @@
                 <TabItem Header="Processes">
                     <GroupBox>
                         <Grid>
-                            <ListView Margin=" 0 3 0 2" ItemsSource="{Binding ProcessList}">
+                            <ListView Margin=" 0 3 0 2" GridViewColumnHeader.Click="Sort" ItemsSource="{Binding ProcessList}">
                                 <ListView.View>
                                     <GridView>
                                         <GridViewColumn Header="ID" DisplayMemberBinding="{Binding Path=ID}"/>

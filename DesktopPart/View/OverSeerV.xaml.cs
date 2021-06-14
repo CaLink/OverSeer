@@ -27,12 +27,7 @@ namespace DesktopPart.View
             InitializeComponent();
         }
 
-        private void MenuItem_Click(object sender, RoutedEventArgs e)
-        {
-            if (Data.Pc == null)
-                return;
-            
-        }
+        
 
         public SeriesCollection RemakeChart(int cores)
         {
@@ -54,6 +49,16 @@ namespace DesktopPart.View
             sas.Series = tempo;
 
             return sas.Series;
+        }
+
+        private void Sort(object sender, RoutedEventArgs e)
+        {
+            
+            string header = ((GridViewColumnHeader)e.OriginalSource).Content.ToString();
+            ListView view = (ListView)sender;
+            if (view.ItemsSource == null)
+                return;
+            ((ModelView.OverSeerMV)gridContext.DataContext).RaiseSort(header, view.ItemsSource);
         }
     }
 }

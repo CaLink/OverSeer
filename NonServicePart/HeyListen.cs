@@ -64,10 +64,12 @@ namespace NonServicePart
 
 
             dbInit();
+            if (pc == null)
+                Environment.Exit(0);
 
             time.Start();
 
-            hey = new TcpListener(IPAddress.Any, 1488);
+            hey = new TcpListener(IPAddress.Any, port);
             Thread tcpThread = new Thread(new ThreadStart(ListenTCP));
             tcpThread.Start();
         }
@@ -144,7 +146,7 @@ namespace NonServicePart
                     preparedMessage = Encoding.UTF8.GetBytes(mes);
 
                     break;
-                
+
             }
 
             return preparedMessage;
@@ -153,7 +155,10 @@ namespace NonServicePart
 
         private void dbInit()
         {
-            pc = InitPC().Result; // Тут нужно создавать комп? хз пока
+            pc = InitPC().Result;
+            if (pc == null)
+                return;
+                // Тут нужно создавать комп? хз пока
             SendGeneralInfo(); // Тут отправляем всю основную инфу о компе
 
             SendDrive(); // Тут все винты
@@ -164,21 +169,32 @@ namespace NonServicePart
 
         private async Task<Pc> InitPC()
         {
-
+            Pc tempPc = new Pc();
             if (File.Exists("Secret.Data"))
                 using (FileStream fs = new FileStream("Secret.Data", FileMode.Open, FileAccess.Read))
                 using (StreamReader sr = new StreamReader(fs))
                 {
-                    pc.id = int.Parse(sr.ReadLine());
-                    pc.GUID = sr.ReadLine();
+                    int tempo = -1;
+                    if (!int.TryParse(sr.ReadLine(), out tempo))
+                    {
+                        System.Windows.MessageBox.Show("Server Connection Error", "OverSeerAgent");
+                        return null;
+                    }
+                    tempPc.id = tempo;
+                    tempPc.GUID = sr.ReadLine();
                 }
 
-            Pc temp = HttpMessage.MethodPost("api/Pcs", pc).Result;
+            Pc temp = HttpMessage.MethodPost("api/Pcs", tempPc).Result;
             if (temp == null)
             {
-                return null;
-
+                System.Windows.MessageBox.Show("Server Connection Error", "OverSeerAgent");
+                App.Current.Shutdown();
+                return temp;
             }
+
+
+
+
 
             using (FileStream fs = new FileStream("Secret.Data", FileMode.Create, FileAccess.Write))
             using (StreamWriter sw = new StreamWriter(fs))
