@@ -23,7 +23,15 @@
             <RowDefinition Height="auto" MinHeight="25"/>
         </Grid.RowDefinitions>
 
-        <ComboBox  Grid.Column="0" Grid.Row="0" ItemsSource="{Binding Pcs}" SelectedItem="{Binding SelectedPC}" DisplayMemberPath="Name"/>
+        <ComboBox  Grid.Column="0" Grid.Row="0" ItemsSource="{Binding Pcs}" SelectedItem="{Binding SelectedPC}" DisplayMemberPath="Name" Foreground="Red">
+            <ComboBox.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="Black" Offset="0"/>
+                    <GradientStop Color="#FF009C9C" Offset="1"/>
+                </LinearGradientBrush>
+            </ComboBox.Background>
+        </ComboBox>
+
         <TextBox Grid.Column="1" Grid.Row="0" Margin="0,1,0,139" Grid.RowSpan="2" Text="{Binding Contain}"/>
         <StackPanel Grid.Column="2" Grid.Row="0">
             <Button  Content="Select" Command="{Binding Find}"/>
