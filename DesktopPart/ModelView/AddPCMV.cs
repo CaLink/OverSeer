@@ -22,7 +22,7 @@ namespace DesktopPart.ModelView
             Save = new CustomCUMmand<string>(
                 (s) =>
                 {
-                    if (IPAddress.TryParse(Pc.IP, out ip))
+                    if (!IPAddress.TryParse(Pc.IP, out ip))
                     {
                         System.Windows.MessageBox.Show("Wrong IP");
                         return;

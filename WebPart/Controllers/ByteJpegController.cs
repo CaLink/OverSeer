@@ -28,10 +28,11 @@ namespace WebPart.Controllers
         public string Get(int id)
         {
             Pc pc = db.Pcs.Find(id);
+            IPAddress iPAddress;
             if (pc == null)
                 return null;
             else
-                if (string.IsNullOrWhiteSpace(pc.IP))
+                if (string.IsNullOrWhiteSpace(pc.IP) || !IPAddress.TryParse(pc.IP, out iPAddress))
                 return null;
 
             string retMess = "";

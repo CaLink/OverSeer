@@ -5,8 +5,23 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DesktopPart.View"
         mc:Ignorable="d"
-        Title="AboutV" Height="450" Width="800">
+        Title="AboutV" Height="450" Width="914" Loaded="OnLoad"
+        Background="black">
+    
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="361"/>
+        </Grid.ColumnDefinitions>
+
+        <MediaElement Grid.Column="0" Source="Resources/RickRoll.mp4" HorizontalAlignment="Left" Height="400" VerticalAlignment="Top" Width="535" Margin="10,10,0,0"/>
         
+        <StackPanel Grid.Column="1" Orientation="Vertical">
+            <TextBlock x:Name="uno" Text="OverSeer" FontFamily="Cooper Black" FontSize="36"/>
+            <TextBlock x:Name="dos" Text="Version 0.5" FontFamily="Comic Sans MS" FontSize="20"/>
+            <TextBlock x:Name="trees" Text="Author: SomeOneInvalid" FontFamily="Comic Sans MS" FontSize="20"/>
+            <TextBlock x:Name="quadro" Text="Invalid Inc. No one right is protected" FontFamily="Comic Sans MS" FontSize="20"/>
+            <Image Margin="0 50 0 0" Source="pack://application:,,,/Resources/Carmageddon.png" />
+        </StackPanel>
     </Grid>
 </Window>

@@ -184,26 +184,26 @@
     <Compile Include="Controllers\PcGroupsController.cs" />
     <Compile Include="Controllers\PcLoadInfoesController.cs" />
     <Compile Include="Controllers\PcsController.cs" />
-    <Compile Include="DateTrans.Context.cs">
+    <Compile Include="DateTrance.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>DateTrans.Context.tt</DependentUpon>
+      <DependentUpon>DateTrance.Context.tt</DependentUpon>
     </Compile>
-    <Compile Include="DateTrans.cs">
+    <Compile Include="DateTrance.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>DateTrans.tt</DependentUpon>
+      <DependentUpon>DateTrance.tt</DependentUpon>
     </Compile>
-    <Compile Include="DateTrans.Designer.cs">
+    <Compile Include="DateTrance.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>DateTrans.edmx</DependentUpon>
+      <DependentUpon>DateTrance.edmx</DependentUpon>
     </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Log.cs">
-      <DependentUpon>DateTrans.tt</DependentUpon>
+      <DependentUpon>DateTrance.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\ByteJpeg.cs" />
     <Compile Include="Models\LogsM.cs" />
@@ -220,19 +220,19 @@
     <Compile Include="Models\TempLogs.cs" />
     <Compile Include="Models\TempPc.cs" />
     <Compile Include="Pc.cs">
-      <DependentUpon>DateTrans.tt</DependentUpon>
+      <DependentUpon>DateTrance.tt</DependentUpon>
     </Compile>
     <Compile Include="PcDrive.cs">
-      <DependentUpon>DateTrans.tt</DependentUpon>
+      <DependentUpon>DateTrance.tt</DependentUpon>
     </Compile>
     <Compile Include="PcGeneralInfo.cs">
-      <DependentUpon>DateTrans.tt</DependentUpon>
+      <DependentUpon>DateTrance.tt</DependentUpon>
     </Compile>
     <Compile Include="PcGroup.cs">
-      <DependentUpon>DateTrans.tt</DependentUpon>
+      <DependentUpon>DateTrance.tt</DependentUpon>
     </Compile>
     <Compile Include="PcLoadInfo.cs">
-      <DependentUpon>DateTrans.tt</DependentUpon>
+      <DependentUpon>DateTrance.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -242,15 +242,15 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
-    <Content Include="DateTrans.Context.tt">
+    <Content Include="DateTrance.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>DateTrans.edmx</DependentUpon>
-      <LastGenOutput>DateTrans.Context.cs</LastGenOutput>
+      <DependentUpon>DateTrance.edmx</DependentUpon>
+      <LastGenOutput>DateTrance.Context.cs</LastGenOutput>
     </Content>
-    <Content Include="DateTrans.tt">
+    <Content Include="DateTrance.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>DateTrans.edmx</DependentUpon>
-      <LastGenOutput>DateTrans.cs</LastGenOutput>
+      <DependentUpon>DateTrance.edmx</DependentUpon>
+      <LastGenOutput>DateTrance.cs</LastGenOutput>
     </Content>
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
@@ -276,12 +276,12 @@
     <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\CollectionModelDescription.cshtml" />
     <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\ApiGroup.cshtml" />
     <Content Include="Areas\HelpPage\Views\Help\Api.cshtml" />
-    <EntityDeploy Include="DateTrans.edmx">
+    <EntityDeploy Include="DateTrance.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>DateTrans.Designer.cs</LastGenOutput>
+      <LastGenOutput>DateTrance.Designer.cs</LastGenOutput>
     </EntityDeploy>
-    <Content Include="DateTrans.edmx.diagram">
-      <DependentUpon>DateTrans.edmx</DependentUpon>
+    <Content Include="DateTrance.edmx.diagram">
+      <DependentUpon>DateTrance.edmx</DependentUpon>
     </Content>
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />

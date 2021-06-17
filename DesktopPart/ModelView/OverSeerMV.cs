@@ -124,7 +124,7 @@ namespace DesktopPart.ModelView
                             }
                             Manager.AddWindowsOpen(new LogsV()); break;
                         case "Settings": break;
-                        case "About": break;
+                        case "About":  Manager.AddWindowsOpen(new AboutV()); break;
 
                     }
                 });
@@ -139,6 +139,8 @@ namespace DesktopPart.ModelView
                 async (s) =>
                 {
                     string tempJson = await HttpMessage.MethodGetBut<string>("api/ListProc/" + SelectedPC.id);
+                    if (tempJson == null)
+                        return;
                     List<Proc> tempProc = JsonSerializer.Deserialize<List<Proc>>(tempJson);
                     ProcessList = new ObservableCollection<Proc>(tempProc);
 
@@ -157,6 +159,8 @@ namespace DesktopPart.ModelView
                     try
                     {
                         string tempJson = await HttpMessage.MethodGetBut<string>("api/ByteJpeg/" + SelectedPC.id);
+                        if (tempJson == null)
+                            return;
                         ByteJpeg byteJpeg = JsonSerializer.Deserialize<ByteJpeg>(tempJson);
                         JPEG = Translate(byteJpeg.Jpeg);
                         Data.Bmp = JPEG;
@@ -236,6 +240,8 @@ namespace DesktopPart.ModelView
 
         private void PrepareChart()
         {
+            if (selectedPC.GeneralInfo == null)
+                return;
 
             CpuChartByCore = Manager.GetOverSeerV().RemakeChart(selectedPC.GeneralInfo.LogicalProcessors);
 
