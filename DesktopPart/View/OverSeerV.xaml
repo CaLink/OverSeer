@@ -13,9 +13,11 @@
 
     <Window.Resources>
         <ViewModel:OverSeerMV x:Key="View"/>
-    </Window.Resources>
 
+    </Window.Resources>
+    
     <Grid x:Name="gridContext" DataContext="{StaticResource View}">
+        
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="2*"/>
@@ -59,6 +61,7 @@
                         <i:InvokeCommandAction Command="{Binding GetInfo}"/>
                     </i:EventTrigger>
                 </i:Interaction.Triggers>
+
                 <TreeView.ItemTemplate>
                     <HierarchicalDataTemplate ItemsSource="{Binding PcMs}" >
                         <TextBlock Text="{Binding Name}" Foreground="Aqua"/>
@@ -136,6 +139,7 @@
 
                     <Grid>
                         <ListView Margin=" 0 3 0 2" GridViewColumnHeader.Click="Sort" ItemsSource="{Binding ProcessList}">
+
                             <ListView.View>
                                 <GridView>
 

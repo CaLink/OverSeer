@@ -72,6 +72,8 @@ namespace NonServicePart
             hey = new TcpListener(IPAddress.Any, port);
             Thread tcpThread = new Thread(new ThreadStart(ListenTCP));
             tcpThread.Start();
+
+            SendLogs("ПОИГРАЕЕЕЕЕМ");
         }
 
         private void Time_Tick(object sender, EventArgs e)
@@ -227,7 +229,8 @@ namespace NonServicePart
 
         private void SendLogs(string ex)
         {
-            HttpMessage.MethodPut("api/Logs/" + pc.id, ex);
+            Mess mes = new Mess() { Message = ex };
+            HttpMessage.MethodPut("api/Logs/" + pc.id, mes);
             logs.WriteEntry($"{DateTime.Now}\n" + ex, EventLogEntryType.Error, logsID++);
 
         }

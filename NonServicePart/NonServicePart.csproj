@@ -96,6 +96,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Mess.cs" />
     <Compile Include="Model\ByteJpeg.cs" />
     <Compile Include="Model\ChosenOne.cs" />
     <Compile Include="Model\Disk.cs" />

@@ -45,18 +45,25 @@ namespace WebPart.Controllers
 
         // PUT: api/Logs/5
         [ResponseType(typeof(void))]
-        public async Task<IHttpActionResult> PutLog(int id, string mes)
+        public async Task<IHttpActionResult> PutLog(int id, Mess mes)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
+            if (mes == null)
+                return BadRequest(ModelState);
+
+            if (string.IsNullOrWhiteSpace(mes.Message))
+                return BadRequest(ModelState);
+
+
             Log log = new Log()
             {
                 PcID = id,
                 Date = DateTime.Now,
-                Message = mes
+                Message = mes.Message
 
             };
             db.Logs.Add(log);

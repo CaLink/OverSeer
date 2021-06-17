@@ -178,6 +178,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ListProcController.cs" />
     <Compile Include="Controllers\LogsController.cs" />
+    <Compile Include="Controllers\Mess.cs" />
     <Compile Include="Controllers\PcDrivesController.cs" />
     <Compile Include="Controllers\PcEditorController.cs" />
     <Compile Include="Controllers\PcGeneralInfoesController.cs" />

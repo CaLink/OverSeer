@@ -140,7 +140,11 @@ namespace DesktopPart.ModelView
                 {
                     string tempJson = await HttpMessage.MethodGetBut<string>("api/ListProc/" + SelectedPC.id);
                     if (tempJson == null)
+                    {
+
                         return;
+                    }
+                        
                     List<Proc> tempProc = JsonSerializer.Deserialize<List<Proc>>(tempJson);
                     ProcessList = new ObservableCollection<Proc>(tempProc);
 
@@ -160,7 +164,9 @@ namespace DesktopPart.ModelView
                     {
                         string tempJson = await HttpMessage.MethodGetBut<string>("api/ByteJpeg/" + SelectedPC.id);
                         if (tempJson == null)
+                        {
                             return;
+                        }
                         ByteJpeg byteJpeg = JsonSerializer.Deserialize<ByteJpeg>(tempJson);
                         JPEG = Translate(byteJpeg.Jpeg);
                         Data.Bmp = JPEG;

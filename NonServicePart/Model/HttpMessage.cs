@@ -72,7 +72,7 @@ namespace NonServicePart.Model
 
             try
             {
-                HttpResponseMessage responseMessage =  client.PostAsync(serverIP + route,sc).Result;
+                HttpResponseMessage responseMessage = client.PostAsync(serverIP + route, sc).Result;
 
                 using (var streamResult = await responseMessage.Content.ReadAsStreamAsync())
                 {
@@ -98,7 +98,7 @@ namespace NonServicePart.Model
 
             try
             {
-                HttpResponseMessage responseMessage = client.PutAsync(serverIP + route, sc).Result;
+                await client.PutAsync(serverIP + route, sc);
                 return;
             }
             catch (Exception e)

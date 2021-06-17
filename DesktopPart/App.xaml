@@ -17,6 +17,7 @@
                     </RadialGradientBrush>
                 </Setter.Value>
             </Setter>
+
         </Style>
 
         <Style TargetType="MenuItem">
@@ -24,15 +25,44 @@
             <Setter Property="Background" Value="Black"/>
             <Setter Property="BorderBrush" Value="Gray"/>
             <Setter Property="BorderThickness" Value="1"/>
+
+            <Style.Triggers>
+                <EventTrigger RoutedEvent="MenuItem.Click">
+                    <EventTrigger.Actions>
+                        <SoundPlayerAction Source="Resources\DJEBAN\wpn_select.wav"/>
+                    </EventTrigger.Actions>
+                </EventTrigger>
+
+                <EventTrigger RoutedEvent="Menu.MouseEnter">
+                    <EventTrigger.Actions>
+                        <SoundPlayerAction Source="Resources\DJEBAN\buttonclick.wav"/>
+                    </EventTrigger.Actions>
+                </EventTrigger>
+            </Style.Triggers>
+
         </Style>
+
+        <Style TargetType="TreeViewItem">
+            <Style.Triggers>
+                <EventTrigger RoutedEvent="TreeViewItem.MouseEnter">
+                    <EventTrigger.Actions>
+                        <SoundPlayerAction Source="Resources\DJEBAN\buttonclick.wav"/>
+                    </EventTrigger.Actions>
+                </EventTrigger>
+            </Style.Triggers>
+        </Style>
+
 
         <Style TargetType="TabItem">
             <Setter Property="Background" Value="Black"/>
             <Setter Property="Foreground" Value="Aqua"/>
-            <Style.Triggers>
-                <Trigger Property="IsSelected" Value="True">
 
-                </Trigger>
+            <Style.Triggers>
+                <EventTrigger RoutedEvent="TabItem.MouseEnter">
+                    <EventTrigger.Actions>
+                        <SoundPlayerAction Source="Resources\DJEBAN\buttonrollover.wav"/>
+                    </EventTrigger.Actions>
+                </EventTrigger>
             </Style.Triggers>
 
         </Style>
@@ -62,6 +92,15 @@
                 </Setter.Value>
             </Setter>
             <Setter Property="Foreground" Value="#FFFF002E"/>
+
+            <Style.Triggers>
+                <EventTrigger RoutedEvent="TextBox.MouseEnter">
+                    <EventTrigger.Actions>
+                        <SoundPlayerAction Source="Resources\DJEBAN\buttonrollover.wav"/>
+                    </EventTrigger.Actions>
+                </EventTrigger>
+            </Style.Triggers>
+
         </Style>
 
         <Style TargetType="ListView">
@@ -76,6 +115,16 @@
             <Setter Property="Foreground" Value="Aqua"/>
         </Style>
 
+        <Style TargetType="ListBoxItem">
+            <Style.Triggers>
+                <EventTrigger RoutedEvent="ListBoxItem.MouseEnter">
+                    <EventTrigger.Actions>
+                        <SoundPlayerAction Source="Resources\DJEBAN\buttonrollover.wav"/>
+                    </EventTrigger.Actions>
+                </EventTrigger>
+            </Style.Triggers>
+        </Style>
+
         <Style TargetType="ListBox">
             <Setter Property="Background">
                 <Setter.Value>
@@ -86,22 +135,60 @@
                 </Setter.Value>
             </Setter>
             <Setter Property="Foreground" Value="Aqua"/>
+
         </Style>
 
         <Style TargetType="ListViewItem">
             <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+
+            <Style.Triggers>
+                <EventTrigger RoutedEvent="ListViewItem.MouseEnter">
+                    <EventTrigger.Actions>
+                        <SoundPlayerAction Source="Resources\DJEBAN\buttonrollover.wav"/>
+                    </EventTrigger.Actions>
+                </EventTrigger>
+            </Style.Triggers>
+
         </Style>
 
         <Style TargetType="Button">
             <Setter Property="Background" Value="#FF3E4949"/>
             <Setter Property="Foreground" Value="#FFAB0CF5"/>
             <Setter Property="FontWeight" Value="Bold" />
+
+            <Style.Triggers>
+                <EventTrigger RoutedEvent="Button.Click">
+                    <EventTrigger.Actions>
+                        <SoundPlayerAction Source="Resources\DJEBAN\wpn_select.wav"/>
+                    </EventTrigger.Actions>
+                </EventTrigger>
+                <EventTrigger RoutedEvent="Button.MouseEnter">
+                    <EventTrigger.Actions>
+                        <SoundPlayerAction Source="Resources\DJEBAN\launch_glow1.wav"/>
+                    </EventTrigger.Actions>
+                </EventTrigger>
+            </Style.Triggers>
+
         </Style>
 
         <Style TargetType="{x:Type GridViewColumnHeader}">
             <Setter Property="Background" Value="#FF41494D" />
             <Setter Property="Foreground" Value="#FFCD39DC" />
             <Setter Property="FontWeight" Value="Bold" />
+
+            <Style.Triggers>
+                <EventTrigger RoutedEvent="GridViewColumnHeader.Click">
+                    <EventTrigger.Actions>
+                        <SoundPlayerAction Source="Resources\DJEBAN\wpn_select.wav"/>
+                    </EventTrigger.Actions>
+                </EventTrigger>
+                <EventTrigger RoutedEvent="GridViewColumnHeader.MouseEnter">
+                    <EventTrigger.Actions>
+                        <SoundPlayerAction Source="Resources\DJEBAN\buttonclick.wav"/>
+                    </EventTrigger.Actions>
+                </EventTrigger>
+            </Style.Triggers>
+
         </Style>
 
         <Style TargetType="{x:Type ComboBoxItem}">
@@ -113,8 +200,15 @@
                     </LinearGradientBrush>
                 </Setter.Value>
             </Setter>
-
             <Setter Property="Foreground" Value="Red"/>
+
+            <Style.Triggers>
+                <EventTrigger RoutedEvent="ComboBoxItem.MouseEnter">
+                    <EventTrigger.Actions>
+                        <SoundPlayerAction Source="Resources\DJEBAN\buttonclick.wav"/>
+                    </EventTrigger.Actions>
+                </EventTrigger>
+            </Style.Triggers>
         </Style>
 
     </Application.Resources>
